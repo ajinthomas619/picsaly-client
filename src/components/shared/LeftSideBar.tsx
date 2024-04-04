@@ -4,17 +4,21 @@ import axios from "axios"
 import { useNavigate,useLocation } from "react-router-dom"
 import { User } from "lucide-react"
 import { sidebarLinks } from "@/constants"
+import { UserData } from "@/utils/interfaces/interface"
+import {  useSelector } from "react-redux"
 
 
 
 const LeftSideBar = () => {
   const { pathname } = useLocation()
+
+  const userData = useSelector( (state : UserData )=> state.persisted.user.userData);
   
   const navigate = useNavigate()
   const logout =async()=>{
       try{
         axios.get("http://localhost:3000/api/logout")
-        navigate('/')
+        navigate('/log-in')
       }
       catch(error){
         console.log(error)
@@ -35,8 +39,8 @@ const LeftSideBar = () => {
      <Link to="/profile" className="flex gap-3 items-center">
       <User className="h-14 w-14 rounded-full"/>
       <div className=" flex flex-col">
-        <p className="body-bold"> fullname</p>
-        <p className="small-regular text-light-3">username</p>
+        <p className="body-bold"> {userData.fullname}</p>
+        <p className="small-regular text-light-3">{userData.username}</p>
 
 
       </div>

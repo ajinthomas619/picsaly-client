@@ -1,9 +1,6 @@
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import  * as z from 'zod'
- 
-import { Button } from "@/components/ui/button"
+import React from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -12,70 +9,96 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "../ui/textarea"
-import FileUploader from "../shared/FileUploader"
-
+import FileUploader from "../shared/FileUploader";
+import { useDispatch, useSelector } from "react-redux";
+import { addPostData } from "@/redux/slices/postSlice";
+import { createPostFunction, updatePostFunction } from "@/utils/api/methods/PostService/post";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "../ui/textarea";
+import {Button} from"../ui/button"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { PostData } from "@/utils/interfaces/interface";
 type PostFormProps = {
-    post?: any; // TODO: type this properly
-}
+  post?: PostData;
+  action: "Create" | "update";
+};
 
 const formSchema = z.object({
-caption:z.string().min(5),
-file:z.custom<File[]>(),
-location:z.string().min(2),
-tags:z.string()
+  caption: z.string().min(5),
+  image: z.custom<File[]>(),
+  location: z.string().min(2),
+  tags: z.string(),
+  createdBy: z.string(),
+});
 
-})
+const PostForm = ({ post, action }: PostFormProps) => {
+  const navigate = useNavigate()
+  console.log("post fo updation",post);
+  const user = useSelector((state: any) => state.persisted.user.userData);
+  
+  const dispatch = useDispatch();
+  const form = useForm<z.infer<typeof formSchema>>({
+    defaultValues: {
+      caption: post?.caption || "",
+      image: post?.image[0]||"",
+      location: post?.location || "",
+      tags: (post?.tags || []).join(",") || "",
+      createdBy: post?.createdBy || user._id,
+    },
+  });
 
-const PostForm = ({ post }:PostFormProps) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try{
+    const formData = new FormData();
+    formData.append("image", values.image[0]);
+    formData.append("caption", values.caption);
+    formData.append("location", values.location);
+    formData.append("tags", values.tags);
+    formData.append("createdBy", values.createdBy);
+console.log("form data before submission",formData);
+console.log("action is ",action);
 
-const form = useForm<z.infer<typeof formSchema>>({
-resolver:zodResolver(formSchema),
-defaultValues:{
-caption: post?.caption || "",
-file:[],
-location:post?.location|| "",
-tags:post?post.tags.join(','):''
+    if (action === "Create") {
+      await createPostFunction(formData);
+      dispatch(addPostData(formData));
+      navigate("/")
+    } else if (action === "update" && post) {
+      console.log("hi");
+      
+      await  axios.put(`http://localhost:3002/api/post/edit-post/${post._id}`, formData);
+      console.log("form data after submission",formData);
+      
+      navigate("/")
+      // Dispatch action to update the post in Redux store if needed
+    }
+  }
+  catch(error){
+    console.log("error in edit post",error)
+  }
 
-
-}
-})
-function onSubmit(values: z.infer<typeof  formSchema>) {
-
-
-//use axios to connect to backend
-}
-
+  };
 
   return (
     <Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col
-     gap-9 w-full max-w-5xl">
-      <FormField
-        control={form.control}
-        name="caption"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="shad-form_label">Caption</FormLabel>
-            <FormControl>
-              <Textarea  className="shad-textarea custom-scrollbar" placeholder="shadcn" {...field} />
-            </FormControl>
-           
-            <FormMessage className="shad-form_message"/>
-          </FormItem>
-        )}
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
+      <Textarea
+        className="shad-textarea custom-scrollbar"
+        placeholder="Caption"
+        {...form.register("caption")}
       />
-      <FormField
+     
+     <FormField
         control={form.control}
-        name="file"
+        name="image"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="shad-form_label">Photo</FormLabel>
             <FormControl>
             <FileUploader
+            name="image"
             fieldChange={field.onChange}
-            mediaUrl={post?.imageUrl}
+            mediaUrl={post?.image[0]}
             
             />           
 
@@ -85,46 +108,25 @@ function onSubmit(values: z.infer<typeof  formSchema>) {
           </FormItem>
         )}
       />
-      <FormField
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="shad-form_label">AddLocation</FormLabel>
-            <FormControl>
-            <Input type="text" className="shad-input" {...field}/>         
-
-            </FormControl>
-           
-            <FormMessage className="shad-form_message"/>
-          </FormItem>
-        )}
+      <Input type="text" className="shad-input" placeholder="Location" {...form.register("location")} />
+      <Input
+        type="text"
+        className="shad-input"
+        placeholder="Tags (separated by comma)"
+        {...form.register("tags")}
       />
-      <FormField
-        control={form.control}
-        name="tags"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="shad-form_label">Add Tags (seperated by comma ",")</FormLabel>
-            <FormControl>
-            <Input type="text" className="shad-input" placeholder="Photos,Filmy,Vibes" {...field}/>         
-
-            </FormControl>
-           
-            <FormMessage className="shad-form_message"/>
-          </FormItem>
-        )}
-      />
+      <Input type="hidden" {...form.register("createdBy")} />
       <div className="flex gap-4 items-center justify-end">
-
-      <Button type="button" className="shad-button_dark_4">Cancel</Button>
-      <Button type="submit" className="shad-button_primary whitespace-nowrap">Submit</Button>
-
-
+        <Button type="button" className="shad-button_dark_4" onClick={() => form.reset()}>
+          Cancel
+        </Button>
+        <Button type="submit" className="shad-button_primary whitespace-nowrap">
+          {action === "Create" ? "Create" : "update"}
+        </Button>
       </div>
     </form>
-  </Form>
-  )
-}
+    </Form>
+  );
+};
 
-export default PostForm
+export default PostForm;
