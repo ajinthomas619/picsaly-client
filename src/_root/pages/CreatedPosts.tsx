@@ -6,9 +6,9 @@ import { debounce } from "@/lib/utils";
 import { PostData, UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 
-const LikedPost = () => {
+const CreatedPost = () => {
   const userData = useSelector((state: UserData) => state.persisted.user.userData);
-  const id = userData.finduser._id; // Corrected variable name
+// Corrected variable name
   const { id: routeId } = useParams(); // Assuming the route is something like /profile/:id/liked-posts
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -16,22 +16,13 @@ const LikedPost = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [q, setQ] = useState<string>('');
 
-
-  useEffect(() => {
-    if (id) {
-      navigate("/");
-    } else {
-      navigate("/log-in");
-    }
-  }, []);
-
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/getLikedPosts/${routeId}`); // Use routeId for consistency
-      console.log("likedpost data", response.data);
-      setPosts(response.data.data);
+      const response = await axios.get(`http://localhost:3000/api/getCreatedPost/${routeId}`); // Use routeId for consistency
+      console.log("createdPost data", response.data);
+      setPosts(response?.data?.data);
     } catch (error) {
-      console.log("error in getting likedPost", error);
+      console.log("error in getting createdPost", error);
     }
   };
 
@@ -58,6 +49,7 @@ const LikedPost = () => {
   return (
     <div className='mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8'>
      
+     
       <div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 py-4'>
         {posts.length > 0? posts.map((post) => (
           <div key={post._id} className="bg-cover bg-center w-64 h-64 rounded-lg" style={{ backgroundImage: `url(http://localhost:3000/profile/${post.image[0]})` }}>
@@ -68,4 +60,4 @@ const LikedPost = () => {
   );
 };
 
-export default LikedPost;
+export default CreatedPost;

@@ -5,20 +5,24 @@ import { useNavigate,useLocation } from "react-router-dom"
 import { User } from "lucide-react"
 import { sidebarLinks } from "@/constants"
 import { UserData } from "@/utils/interfaces/interface"
-import {  useSelector } from "react-redux"
+import {  useSelector,useDispatch } from "react-redux"
+import { clearUser } from '@/redux/slices/userSlices'
 
 
 
 const LeftSideBar = () => {
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
 
   const userData = useSelector( (state : UserData )=> state.persisted.user.userData);
+  console.log("userData:",userData);
   
   const navigate = useNavigate()
   const logout =async()=>{
       try{
         axios.get("http://localhost:3000/api/logout")
         navigate('/log-in')
+        dispatch(clearUser(userData))
       }
       catch(error){
         console.log(error)
@@ -26,7 +30,7 @@ const LeftSideBar = () => {
   }
   return (
   <nav className="=leftsidebar">
-    <div className="flex flex-col gap-11">
+    <div className="flex flex-col gap-11 px-2">
     <Link to="/" className='flex gap-3 items-center'>
      {/* <img src="/assets/logo.png"
       alt="logo"
@@ -34,13 +38,13 @@ const LeftSideBar = () => {
       height={100}
       /> */}
 
-      <p className="text-3xl font-bold ">picsaly</p>
+      
      </Link>
-     <Link to="/profile" className="flex gap-3 items-center">
+     <Link to={`/profile/${userData?.finduser._id}`} className="flex gap-3 items-center">
       <User className="h-14 w-14 rounded-full"/>
       <div className=" flex flex-col">
-        <p className="body-bold"> {userData.fullname}</p>
-        <p className="small-regular text-light-3">{userData.username}</p>
+        <p className="body-bold"> {userData.finduser.basicInformation.fullname}</p>
+        <p className="small-regular text-light-3">{userData.finduser.basicInformation.username}</p>
 
 
       </div>
@@ -51,7 +55,7 @@ const LeftSideBar = () => {
       const isActive = pathname === link.route
       return (
         <li key={link.label} className={`leftsidebar-link ${
-          isActive && 'bg-primary-500'
+          isActive && 'bg-purple-100'
         }`}>
         <NavLink to={link.route} className="flex gap-4 items-center p-4">
         <img src={link.imgURL} alt={link.label} className={`group-hover:invert-white

@@ -12,7 +12,7 @@ const userSlice = createSlice({
             state.userData = {...state.userData,...action.payload}
         },
         clearUser:(state) =>{
-            state.userData={}
+            state.userData={...state}
         },
         editUser:(state,action) => {
             state.userData = {...state.userData,...action.payload}

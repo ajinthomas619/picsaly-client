@@ -42,7 +42,7 @@ const form = useForm<z.infer<typeof formSchema>>({
 resolver:zodResolver(formSchema),
 defaultValues:{
 username: user?.username|| "",
-file:[],
+file:user?.profilePicture||"",
 fullname:user?.fullname|| "",
 phone:user?.phone||"",
 dob:user?.dob? new Date(user.dob) : undefined,
@@ -64,6 +64,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
     formData.append('dob', values.dob ? values.dob.toISOString().split('T')[0] : ''); // Format date as string
 
     formData.append('bio', values.bio);
+    formData.append("profileUrl",values.file    )
     
     // const formData = new FormData();
     // formData.append('caption', values.caption);
@@ -71,7 +72,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
 
   
     const response = await axios.post(
-      `http://localhost:3001/api/user/editProfile/{$id}`,
+      `http://localhost:3000/api/editProfile/{$id}`,
       formData,
       {
         withCredentials: true,

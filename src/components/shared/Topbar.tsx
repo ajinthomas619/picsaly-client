@@ -6,8 +6,10 @@ import { User } from "lucide-react"
 
 import { useDispatch,useSelector } from 'react-redux'
 import { useEffect } from "react"
-import { getUser } from '@/redux/slices/userSlices'
+import { getUser,clearUser } from '@/redux/slices/userSlices'
 import { UserData } from '@/utils/interfaces/interface'
+import Search from "./Search"
+
 
 const Topbar = () => {
   const dispatch = useDispatch()
@@ -16,12 +18,14 @@ const Topbar = () => {
 
   useEffect(() => {
     dispatch(getUser(  )); 
-  }, [dispatch]);
+  }, []);
   const navigate = useNavigate()
   const logout =async()=>{
       try{
         axios.get("http://localhost:3000/api/logout")
         navigate('/log-in')
+        dispatch(clearUser(currentUser))
+        
       }
       catch(error){
         console.log(error)
@@ -37,12 +41,13 @@ const Topbar = () => {
       height={325}
       />
      </Link>
+     <Search/>
      <div className="flex gap-4 " >
         <Button variant="ghost" className="shad-button_ghost" onClick={logout}> Logout</Button>
 
-       <Link to="/profile " className="flex-center gap-3">
+       <Link to= {`/profile/${currentUser?.finduser._id} `} className="flex-center gap-3">
        <User className="h-8 w-8 rounded-full"/>
-        {currentUser.username}
+        {currentUser.finduser.basicInformation.username}
         </Link>
      </div>
 

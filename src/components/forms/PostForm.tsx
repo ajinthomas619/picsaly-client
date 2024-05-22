@@ -44,7 +44,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       image: post?.image[0]||"",
       location: post?.location || "",
       tags: (post?.tags || []).join(",") || "",
-      createdBy: post?.createdBy || user._id,
+      createdBy: post?.createdBy || user.finduser._id,
     },
   });
 
@@ -66,7 +66,7 @@ console.log("action is ",action);
     } else if (action === "update" && post) {
       console.log("hi");
       
-      await  axios.put(`http://localhost:3002/api/post/edit-post/${post._id}`, formData);
+      await  axios.put(`http://localhost:3000/api/edit-post/${post._id}`, formData);
       console.log("form data after submission",formData);
       
       navigate("/")

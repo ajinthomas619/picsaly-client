@@ -20,17 +20,18 @@ const PostDetails = () => {
  const { id } = useParams();
  const dispatch = useDispatch();
  const userData = useSelector((state: any) => state.persisted.user.userData);
+ 
 
  useEffect(() => {
-    if (!userData.username) {
-      navigate("/login");
+    if (!userData.finduser.basicInformation.username) {
+      navigate("/log-in");
     }
  }, []);
 
  useEffect(() => {
     if (id) {
       setLoading(true); // Set loading to true before fetching
-      axios.get(`http://localhost:3002/api/post/get-post/${id}`)
+      axios.get(`http://localhost:3000/api/get-post/${id}`)
         .then((res: any) => {
           setPosts(res.data.post);
           setUser(res.data.user);
@@ -45,7 +46,7 @@ const PostDetails = () => {
  // Include post in the dependency array
 console.log("the post details after use effect",posts)
  const handleDeletePost = () => {
-    dispatch(removePost(post?._id));
+    dispatch(removePost(posts?._id));
  };
 
  const multiFormatDateString = (dateString: string) => {
@@ -77,10 +78,11 @@ console.log("the post details after use effect",posts)
 
       <div className="post_details-card">
         <img
-           src={`http://localhost:3002/img/${posts?.image[0] || 'public/assets/icons/profile-placeholder.svg'}`} 
+          width ={700}
+           src={`http://localhost:3000/profile/${posts?.image[0] || 'public/assets/icons/profile-placeholder.svg'}`} 
           
           alt="creator"
-          className="post_details-img"
+          className="post_details-img rounded-lg"
         />
 
         <div className="post_details-info">
@@ -90,7 +92,7 @@ console.log("the post details after use effect",posts)
               className="flex items-center gap-3">
               <img
                 src={
-                 posts?.createdBy.imageUrl ||
+                 `http://localhost:3000/profile/${posts?.createdBy?.profile?.profileUrl }`||
                  "/assets/icons/profile-placeholder.svg"
                 }
                 alt="creator"
@@ -98,7 +100,7 @@ console.log("the post details after use effect",posts)
               />
               <div className="flex gap-1 flex-col">
                 <p className="base-medium lg:body-bold text-light-1">
-                 {posts?.createdBy.name}
+                 {posts?.createdBy?.basicInformation?.username}
                 </p>
                 <div className="flex-center gap-2 text-light-3">
                  <p className="subtle-semibold lg:small-regular ">

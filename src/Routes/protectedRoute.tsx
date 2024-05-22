@@ -1,21 +1,17 @@
 import React from "react";
-import {  useSelector } from "react-redux";
-import { Link,Route,Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Route, Link } from "react-router-dom";
 
-const protectedRoute = ({path,element}:any) => {
-    console.log("surprise ptotected route here")
-    const token = useSelector((state:any) => state.persisted.token.token)
+const ProtectedRoute = ({ path, element }: any) => {
+    const token = useSelector((state: any) => state.persisted.token.token);
     
-    return(
-        <React.Fragment>
-            {token?(
-             <Routes>
-                <Route path={path} element={element}/>
-             </Routes>
-            ):(
-                <Link to='/login'/>
-            )}
-        </React.Fragment>
-    )
+  
+    if (token) {
+        return <Route path={path} element={element} />;
+    }
+
+   
+    return <Link to='/log-in'>Log In</Link>;
 }
-export default protectedRoute
+
+export default ProtectedRoute;

@@ -18,6 +18,7 @@ const RootLayout = () => {
 <Outlet/>
 
 </section>
+
 </div>
 <div className="md:hidden fixed bottom-0 w-full">
 <Bottombar/>

@@ -3,7 +3,7 @@ import { AUTH_URL,USER_URL,POST_URL } from "../baseUrl/axios.baseUrl";
 
 // AUTH SERVICE
 
-export const Login_Api = `${AUTH_URL}/`; 
+export const Login_Api = `${AUTH_URL}/login`; 
 export const Logout_Api = `${AUTH_URL}/logout`
 export  const Signup_Api = `${AUTH_URL}/signup`
 export const VerifyOTP_Api = `${AUTH_URL}/verify-otp`

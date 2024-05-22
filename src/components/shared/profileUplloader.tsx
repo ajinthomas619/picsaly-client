@@ -1,24 +1,25 @@
 import { useCallback, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
-
-
 type ProfileUploaderProps = {
   fieldChange: (files: File[]) => void;
   mediaUrl: string;
+  handleFileChange: (files: File[]) => void;
 };
 
-const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
-  const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState<string>(mediaUrl);
+const ProfileUploader = ({ fieldChange, mediaUrl, handleFileChange }: ProfileUploaderProps) => {
+  const [fileUrl, setFileUrl] = useState(mediaUrl);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
-      setFile(acceptedFiles);
+      if (acceptedFiles.length === 0) return;
+
+      const file = acceptedFiles[0];
+      setFileUrl(URL.createObjectURL(file));
       fieldChange(acceptedFiles);
-      setFileUrl(URL.createObjectURL(acceptedFiles[0]));
+      handleFileChange(acceptedFiles);
     },
-    [file]
+    [fieldChange, handleFileChange]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -34,13 +35,10 @@ const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
 
       <div className="cursor-pointer flex-center gap-4">
         <img
-          src={fileUrl || "./public/assets/icons/profile-placeholder.svg"}
+          src={fileUrl || "https://avatar.iran.liara.run/public/boy"}
           alt="image"
-          className="h-24 w-24 rounded-full object-cover object-top"
+          className="h-52 w-52 rounded-full object-cover object-top"
         />
-        <p className="text-primary-500 small-regular md:bbase-semibold">
-          Change profile photo
-        </p>
       </div>
     </div>
   );

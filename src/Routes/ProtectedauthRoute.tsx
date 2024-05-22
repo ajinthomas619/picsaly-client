@@ -3,11 +3,12 @@ import {  useSelector } from "react-redux";
 
 const protectedAuthroute = ({children}:{children:any}) => {
     const token = useSelector((state:any) => state.persisted.token.token)
+    
     if(token){
         return children
     }
     else{
-        return <Navigate to='/login' />
+        return <Navigate to='/log-in' />
     }
 }
 export default protectedAuthroute

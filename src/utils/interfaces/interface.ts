@@ -6,7 +6,7 @@ export interface UserData {
     password:string;
     mobile:string;
     profilePicture:string;
-    uid:string;
+    userId:string;
     userName:string;
     bio:string;
     followers:any[];

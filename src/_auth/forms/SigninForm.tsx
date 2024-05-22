@@ -1,21 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { signInWithGooglePopup } from "../firebase/firebaseconfig";
-import { useDispatch } from "react-redux";
-import { LoginFunction,LoginWithGoogleFunction } from "@/utils/api/methods/AuthService/post";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  LoginFunction,
+  LoginWithGoogleFunction,
+} from "@/utils/api/methods/AuthService/post";
 import { addUser } from "@/redux/slices/userSlices";
 import { UserData } from "@/utils/interfaces/interface";
-
-
+import toast from "react-hot-toast"
 
 const LoginForm: React.FC = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const Data = useSelector(
+    (state: UserData) => state.persisted.user.userData
+  );
+  useEffect(() => {
+    if (Data?.finduser?._id) {
+      navigate("/");
+    } else {
+      navigate("/log-in");
+    }
+  }, []);
 
   const formSchema = z.object({
     email: z.string().min(6),
@@ -32,23 +45,24 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const response:any =await LoginFunction(
-        {
-        email:data.email,
-        password:data.password
-        }
-      )
+      const response: any = await LoginFunction({
+        email: data.email,
+        password: data.password,
+      });
+    console.log(response.data.status);
+    
 
-      if (response && response.data) {
-        console.log("Registration successful:", response.data);
-       dispatch(addUser(response.data.user));
+      if (response.data.status) {
         navigate("/");
+        console.log("Registration successful:", response.data);
+        dispatch(addUser(response.data.user));
       } else {
         console.error("Unexpected response structure:", response);
       }
     } catch (error) {
       console.error("Registration failed:", error);
       setError("Login failed. Please check your credentials.");
+      toast.error("Login Failed please check your credentials")
     }
   };
 
@@ -58,27 +72,26 @@ const LoginForm: React.FC = () => {
       console.log(response);
       const googleUser = response.user;
       console.log("gooo=", googleUser);
-      const userData:UserData = {
-        uid: googleUser.uid || '',
-        userName: googleUser.displayName || '',
-        email: googleUser.email || '',
-        profilePicture: googleUser.photoURL || '',
-        persisted:true,
-        isGoogle:true,
-        password:"",
-        mobile:"",
-        fullname:"",
-        bio:"",
-        followers:[],
-        following:[],
-        _id:"",
-        createdOn:new Date(Date.now()) ,
-
+      const userData: UserData = {
+        uid: googleUser.uid || "",
+        userName: googleUser.displayName || "",
+        email: googleUser.email || "",
+        profilePicture: googleUser.photoURL || "",
+        persisted: true,
+        isGoogle: true,
+        password: "",
+        mobile: "",
+        fullname: "",
+        bio: "",
+        followers: [],
+        following: [],
+        _id: "",
+        createdOn: new Date(Date.now()),
       };
       console.log("g=>", userData);
-      const dataa =await LoginWithGoogleFunction(userData)
+      const dataa = await LoginWithGoogleFunction(userData);
       console.log("Data sent to backend successfully", dataa?.data);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.error("Google Sign-In failed:", error);
       setError("Google Sign-In failed. Please try again later.");
@@ -102,10 +115,9 @@ const LoginForm: React.FC = () => {
                 type="email"
                 {...register("email")}
               />
-              {errors.email && typeof errors.email === 'string' &&(
+              {errors.email && typeof errors.email === "string" && (
                 <span className="text-red-500">{errors.email}</span>
               )}
-
             </label>
 
             <label className="mb-5">
@@ -115,7 +127,7 @@ const LoginForm: React.FC = () => {
                 type="password"
                 {...register("password")}
               />
-              {errors.password && typeof errors.password === 'string' && (
+              {errors.password && typeof errors.password === "string" && (
                 <span className="text-red-500">{errors.password}</span>
               )}
             </label>
@@ -127,7 +139,9 @@ const LoginForm: React.FC = () => {
         </div>
       </form>
       <Button onClick={googleSignIn}>Sign In With Google</Button>
-      <a href="/sign-up" className="text-blue-500">No Account Yet? Sign Up</a>
+      <a href="/sign-up" className="text-blue-500">
+        No Account Yet? Sign Up
+      </a>
     </>
   );
 };

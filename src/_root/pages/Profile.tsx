@@ -4,157 +4,203 @@ import {
   Link,
   Outlet,
   useParams,
-  useLocation
-} from 'react-router-dom'
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { LikedPost } from ".";
+import { Loader } from "lucide-react";
+import GridPostList from "@/components/shared/GridPostList";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import CreatedPost from "./CreatedPosts";
 
-import { useDispatch,useSelector } from 'react-redux'
-
-import { Button } from '@/components/ui/button'
-import { LikedPost } from '.'
-import { Loader } from 'lucide-react'
-import GridPostList from '@/components/shared/GridPostList'
-import { getUser } from '@/redux/slices/userSlices'
-
-import { useEffect} from 'react'
-import { UserData } from '@/utils/interfaces/interface'
-
-interface StabBlockProps{
-  value:string|number
-  label:string
-}
-
-const StatBlock = ({value,label}:StabBlockProps) => (
-  <div className='flex flex-center gap-2'>
-<p className="small-semibold lg:body-bold text-primary-500">{value}</p>
-<p className='small-medium lg:base-medium text-light-2'>{label}</p>
+const StatBlock = ({ value, label }) => (
+  <div className="flex flex-center gap-2">
+    <p className="small-semibold lg:body-bold text-primary-500">{value}</p>
+    <p className="small-medium lg:base-medium text-light-2">{label}</p>
   </div>
-)
+);
+
 const Profile = () => {
-  const dispatch = useDispatch()
-  const {id} = useParams()
-  if (!id) {
-    return <div>Invalid ID</div>;
+  const [currentUser, setCurrentUser] = useState({});
+  const [followUser, setFollowUser] = useState(false);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { pathname } = useLocation();
+
+  const User = useSelector((state) => state.persisted.user.userData);
+  const userId = User?.finduser?._id;
+  console.log("iddd", id);
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (userId) {
+    
+    } else {
+      navigate("/log-in");
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/getUserById/${id}`
+        );
+        console.log("the response data", response.data.data);
+        setCurrentUser(response.data.data);
+        if (
+          response.data.data?.socialConnections?.Followers?.includes(userId)
+        ) {
+          setFollowUser(true);
+        }
+      } catch (error) {
+        console.error("Error while fetching user data", error);
+      }
+    };
+
+    fetchUserData();
+  }, [id, userId]);
+
+  const follow = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/followUser",
+        {
+          currentUserId: userId,
+          followedUserid: id,
+        }
+      );
+      console.log("the response is", response);
+      if (response.status) {
+        setFollowUser((prev) => !prev);
+      }
+    } catch (error) {
+      console.log("error following user", error);
+    }
+  };
+
+  if (!currentUser) {
+    return (
+      <div className="flex flex-center w-full h-full">
+        <Loader />
+      </div>
+    );
   }
- 
-  const {pathname} = useLocation()
-  const currentUser = useSelector( (state : UserData )=> state.persisted.user.userData);
-  console.log("currentUser",currentUser);
-  
-  const user = useParams()
-useEffect(() => {
-  dispatch(getUser(  )); 
-}, [dispatch, id]);
 
-  if(!currentUser)
-  return(
-   <div className='flex flex-center w-full h-full'><Loader/></div>
-    )
-    return(
-    <div className='profile-container'>
-      <div className='profile-inner_container'>
-        <div className='flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7'>
-          <img src={
-            currentUser.imageUrl|| "/public/assets/icons/profile-placeholder.svg"
-          } alt="profile" className='w-28 h-28 lg:h-36 lg:w-36 rounded-full' />
-        <div className='flex flex-col flex-1 justify-between md:mt-2'>
-          <h1 className='text-center xl:text-left h3-bold md:h1-semibold w-full'>
-                {currentUser.name}
-
-          </h1>
-          <p className='small-regular md:body-medium text-light-3 text-center xl:text-left'>
-
-           @{currentUser.username}
-          </p>
-          <div className='flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20'>
-           <StatBlock value ={currentUser.posts} label='Posts'/>
-           <StatBlock value={currentUser.followers} label="Followers" />
-           <StatBlock value={currentUser.following} label="following"/>
-
-           <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
-              {currentUser.bio}
-            </p>
-
-          </div>
-          <div className = 'flex justify-center gap-4'>
-      <div className={`$user.id !==currentUser.$id && "hidden"`}>
-        <Link
-          to={`/update-profile/${currentUser.$id}`}
-          className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
-             user?.id !== currentUser.$id && "hidden"
-          }`}>
-          <img src={"/public/assets/icons/edit.svg"}
-          alt ='edit'
-          width={20}
-          height={20} />
-          <p className='flex whitespace-nowrap small-medium'>
-            Edit Profile
-          </p>
-
-
-          </Link>
-
-
-      </div>
-      <div className={`${user?.id === id && "hidden"}`}>
-   <Button type="button" className='shad-button_primary px-8'>
-    Follow
-   </Button>
-      </div>
- 
-          </div>
-
-
-
-        </div>
-
-
-        </div>
-
-
-      </div>
-      {currentUser.$id === user?.id &&(
-        <div className='flex max-w-5xl w-full'> 
-         <Link to={'/profile/${id'}
-         className={`profile-tab rounded-1-lg ${
-          pathname===`/profile/${id} && "!bg-dark-3`
-         }`}>
-
-          <img src={"/public/assets/posts.svg"}
-          alt="posts"
-          width={20}
-          height={20}
+  return (
+    <div className="profile-container">
+      <div className="profile-inner_container">
+        <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
+          <img
+            src={
+              currentUser
+                ? `http://localhost:3000/profile/${
+                    currentUser?.profile?.profileUrl ||
+                    "https://avatar.iran.liara.run/public/boy"
+                  }`
+                : ""
+            }
+            alt="profile"
+            className="w-36 h-36 lg:h-36 lg:w-36 rounded-full "
           />
-          Posts
-         </Link>
-         <Link to={`/profile/${id}/liked-posts`}
-         className={`profile-tab rounded-r-lg ${
-          pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
-         }`}>
-           <img src={"/public/assets/icons/like.svg"}
-           alt='like'
-           width={20}
-           height={20} />
-
-         </Link>
+          <div className="flex flex-col flex-1 justify-between md:mt-2">
+            <p className="small-regular md:body-medium text-light-3 text-center xl:text-left">
+              {currentUser?.basicInformation?.username}
+            </p>
+            <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
+              <StatBlock value={currentUser.posts || 0} label="Posts" />
+              <StatBlock
+                value={currentUser?.activity?.followers || 0}
+                label="Followers"
+              />
+              <StatBlock
+                value={currentUser?.activity?.following || 0}
+                label="following"
+              />
+            </div>
+            <div>
+              <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
+                {currentUser?.profile?.Bio}
+              </p>
+            </div>
+            <div className="flex justify-center gap-4">
+              {userId === currentUser._id ? (
+                <Link
+                  to={`/update-profile/${userId}`}
+                  className="h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg"
+                >
+                  <img
+                    src={"/public/assets/icons/edit.svg"}
+                    alt="edit"
+                    width={20}
+                    height={20}
+                  />
+                  <p className="flex whitespace-nowrap small-medium">
+                    Edit Profile
+                  </p>
+                </Link>
+              ) : (
+                <Button
+                  type="button"
+                  className="shad-button_primary px-8"
+                  onClick={follow}
+                >
+                  {followUser ? "Unfollow" : "Follow"}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
+
+      <div className="flex max-w-5xl w-full gap-2 py-4">
+        <Link
+          to={`/profile/${id}/created-posts`}
+          className={`profile-tab gap-2 rounded-1-lg ${
+            pathname === `/profile/${id}/created-post` && "!bg-dark-3"
+          }`}
+        >
+          <img
+            src={"/public/assets/icons/posts.svg"}
+            alt="posts"
+            width={20}
+            height={20}
+          />
+        </Link>
+        <Link
+          to={`/profile/${id}/liked-posts`}
+          className={`profile-tab gap-2 rounded-r-lg ${
+            pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
+          }`}
+        >
+          <img
+            src={"/public/assets/icons/like.svg"}
+            alt="like"
+            width={20}
+            height={20}
+          />
+        </Link>
+      </div>
+
       <Routes>
-        <Route 
-        index
-        element={<GridPostList posts={currentUser.posts} showUser={false}/>}
+        <Route
+          index
+          element={<GridPostList posts={currentUser.posts} showUser={false} />}
         />
-        {currentUser.$id === user?.id && (
-          <Route path="/liked-posts" element={<LikedPost/>}/>
+        {currentUser?._id && (
+          <>
+            <Route path="/liked-posts" element={<LikedPost />} />
+            <Route path="/created-posts" element={<CreatedPost />} />
+          </>
         )}
       </Routes>
-    <Outlet />
-
-
+      <Outlet />
     </div>
+  );
+};
 
-    )
-}
-
-
-
-export default Profile
+export default Profile;

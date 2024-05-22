@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 import { useNavigate } from 'react-router-dom';
 import { SignUpFunction } from "@/utils/api/methods/AuthService/post";
+import { useSelector } from "react-redux";
+import { UserData } from "@/utils/interfaces/interface";
 
 interface FormErrors {
   username?: string;
@@ -24,7 +26,16 @@ const SignupForm: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const navigate = useNavigate();
- 
+  const Data = useSelector(
+    (state: UserData) => state.persisted.user.userData
+  );
+  useEffect(() => {
+    if (Data?.finduser?._id) {
+      navigate("/");
+    } else {
+      navigate("/log-in");
+    }
+  }, []);
 
   useEffect(() => {
     if (formSubmitted) {
