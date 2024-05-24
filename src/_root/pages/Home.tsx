@@ -13,10 +13,10 @@ const Home = () => {
   const userData = useSelector(
     (state: UserData) => state.persisted.user.userData
   );
-  console.log("user data", userData);
+;
 
   const id = userData.finduser._id;
-  console.log("id of user", id);
+  
 
   const navigate = useNavigate();
 
@@ -67,7 +67,7 @@ const Home = () => {
           )}
         </div>
       </div >
-      <div className="hidden md:block">
+      <div className="hidden md:block w-1/3 justify-end ml-36">
         <SuggestedUsers />
         </div>
     </div>

@@ -14,23 +14,18 @@ const OTPValidation = () => {
 const navigate = useNavigate()
 const dispatch = useDispatch()
 
+
 const Data = useSelector(
   (state: UserData) => state.persisted.user.userData
 );
-useEffect(() => {
-  if (Data?.finduser?.id) {
-    navigate("/");
-  } else {
-    navigate("/log-in");
-  }
-}, []);
+
 
  const validate = async (e:any) => {
     try {
      
       
       const response:any =await  verifyOtpFunctiom({otp:otp})
-      console.log(response)
+      console.log("response of otp",response)
       if(response.data?.status === false){
         toast.error(response?.data?.message)
       }
@@ -76,9 +71,7 @@ useEffect(() => {
  };
 
  
- useEffect(() => {
-   
- }, []); 
+
 
  
  return (
@@ -87,7 +80,7 @@ useEffect(() => {
       validate(otp);
     }}>
       <h4>Enter The otp number sent to your mail</h4>
-      <input className="border " type="number" value={otp} onChange={(e) => setOtp(e.target.value)} />
+      <input className="input input-ghost input-bordered " type="number" value={otp} onChange={(e) => setOtp(e.target.value)} />
       <Button type='submit'>Verify</Button>
     </form>
  );

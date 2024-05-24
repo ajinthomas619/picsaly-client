@@ -15,6 +15,8 @@ import GridPostList from "@/components/shared/GridPostList";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CreatedPost from "./CreatedPosts";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 
 const StatBlock = ({ value, label }) => (
   <div className="flex flex-center gap-2">
@@ -37,11 +39,11 @@ const Profile = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (userId) {
+    if (!userId) {
     
-    } else {
       navigate("/log-in");
-    }
+    } 
+    
   }, []);
 
   useEffect(() => {
@@ -95,7 +97,7 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-inner_container">
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
-          <img
+          <LazyLoadImage
             src={
               currentUser
                 ? `http://localhost:3000/profile/${

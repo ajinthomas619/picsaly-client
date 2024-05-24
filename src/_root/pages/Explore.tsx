@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { debounce } from "@/lib/utils";
 import { PostData } from "@/utils/interfaces/interface";
 import axios from "axios";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 
 const ExplorePage = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
@@ -80,13 +82,13 @@ const ExplorePage = () => {
       <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
         {posts.length > 0
           ? posts.map((post) => (
-              <div
-                key={post._id}
-                className="bg-cover bg-center w-64 h-64 rounded-lg"
-                style={{
-                  backgroundImage: `url(http://localhost:3000/profile/${post.image[0]})`,
-                }}
-              ></div>
+            <LazyLoadImage
+            key={post._id}
+            src={`http://localhost:3000/profile/${post.image[0]}`}
+            alt="Profile"
+            className="w-64 h-64 object-cover rounded-lg"
+            loading="lazy"
+          />
             ))
           : "No Post found"}{" "}
       </div>

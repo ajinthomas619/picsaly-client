@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Follow from "./Follow";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 
 const SuggestedUsers = () => {
   const [users, setUsers] = useState([]);
@@ -11,14 +13,13 @@ const SuggestedUsers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("user data", userData);
+       
         const id = userData.finduser._id;
-        console.log("the user iddd", id);
+       
         const res = await axios.get(
           `http://localhost:3000/api/getSuggestedUsers/${id}`
         );
-        console.log("the actual response", res);
-        console.log("all users", res.data.data);
+     
         setUsers(res.data.data);
       } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -40,7 +41,7 @@ const SuggestedUsers = () => {
               >
                 {user?.profile?.profileUrl && (
                   <Link to={`/profile/${user?._id}`} className="shrink-0">
-                    <img
+                    <LazyLoadImage
                       src={`http://localhost:3000/profile/${user.profile.profileUrl}`}
                       alt={`${user?.basicInformation?.username}'s profile`}
                       className="w-16 h-16 rounded-full object-cover"

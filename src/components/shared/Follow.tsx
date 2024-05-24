@@ -13,7 +13,7 @@ const Follow = (id:any,currentUserid:any) => {
     
 
 
-    console.log("idd for follow user",id)
+   
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -21,7 +21,7 @@ const Follow = (id:any,currentUserid:any) => {
                 const response = await axios.get(
                   `http://localhost:3000/api/getUserById/${id}`
                 );
-                console.log("the response data", response.data.data);
+             
                 setCurrentUser(response.data.data);
                 if (
                   response.data.data?.socialConnections?.Followers?.includes(currentUserid)
@@ -44,8 +44,7 @@ const Follow = (id:any,currentUserid:any) => {
               followedUserid: id.id,
             }
           );
-          console.log("the response is", response);
-          if (response.status) {
+          console.log("the response is", response);   if (response.status) {
             setFollowUser((prev) => !prev);
           }
         } catch (error) {

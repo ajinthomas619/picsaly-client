@@ -4,6 +4,7 @@ import { getUserFunction } from "@/utils/api/methods/UserService/post";
 import { UserData } from "@/utils/interfaces/interface";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import PostStats from "./PostStats";
 
@@ -14,7 +15,7 @@ type PostCardProps = {
 const PostCard = ({ post }: PostCardProps) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const user = useSelector((state: any) => state.persisted.user.userData);
-  console.log("post data", post);
+ 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,7 +24,7 @@ const PostCard = ({ post }: PostCardProps) => {
         const response = await axios.get(
           `http://localhost:3000/api/getUserById/${id}`
         );
-        console.log("the response data", response.data.data);
+     
         setUserData(response.data.data);
       } catch (error) {
         console.error("Error while fetching user data", error);
@@ -38,12 +39,12 @@ const PostCard = ({ post }: PostCardProps) => {
     : "";
 
   return (
-    <div className="post-card flex flex-col px-10 py-20 ">
+    <div className="post-card flex flex-col px-6 py-20  ">
       {userData && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Link to={`/profile/${userData?._id}`}>
-              <img
+              <LazyLoadImage
                 src={
                   userData
                     ? `http://localhost:3000/profile/${
@@ -85,9 +86,9 @@ const PostCard = ({ post }: PostCardProps) => {
           )}
         </div>
       )}
-      <div className="w-4/5 h-4/5">
+      <div className="w-full h-4/5">
         <Link to={`/post/${post._id}`}>
-          <div className="small-medium lg:base-medium py-5">
+          <div className="small-medium lg:base-medium py-5 ">
             <p>{post.caption}</p>
             <ul className="flex gap-1 mt-2">
               {post.Tags.map((tag: string) => (

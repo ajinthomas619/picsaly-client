@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removePost, setPost } from "@/redux/slices/postSlice";
 import { UserData, PostData } from "@/utils/interfaces/interface";
 import axios from "axios";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 
 
 
@@ -90,7 +92,7 @@ console.log("the post details after use effect",posts)
             <Link
               to={`/profile/${posts?.createdBy._id}`}
               className="flex items-center gap-3">
-              <img
+              <LazyLoadImage
                 src={
                  `http://localhost:3000/profile/${posts?.createdBy?.profile?.profileUrl }`||
                  "/assets/icons/profile-placeholder.svg"

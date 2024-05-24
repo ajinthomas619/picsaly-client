@@ -13,6 +13,7 @@ import {
 import { addUser } from "@/redux/slices/userSlices";
 import { UserData } from "@/utils/interfaces/interface";
 import toast from "react-hot-toast"
+import { FaGoogle } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {
   const [error, setError] = useState<string>("");
@@ -106,12 +107,12 @@ const LoginForm: React.FC = () => {
         </div>
 
         <h2 className="mb-10 text-center mt-5 font-bold text-3xl">Login</h2>
-        <div>
-          <div className="flex flex-col items-center">
-            <label className="mb-5">
-              Email
+        <div className="p-3 flex flex-col items-center">
+          <div className="flex flex-col items-center ">
+            <label className="mb-5 ">
+             <p>Email</p> 
               <input
-                className="border ml-5"
+                className="input input-ghost input-bordered "
                 type="email"
                 {...register("email")}
               />
@@ -121,9 +122,9 @@ const LoginForm: React.FC = () => {
             </label>
 
             <label className="mb-5">
-              Password
+             <p>Password</p> 
               <input
-                className="border ml-1"
+                className="input input-ghost input-bordered"
                 type="password"
                 {...register("password")}
               />
@@ -135,11 +136,15 @@ const LoginForm: React.FC = () => {
 
           {error && <p className="text-red-500">{error}</p>}
 
-          <Button type="submit">Login</Button>
+          <Button type="submit" className="justify-center">Login</Button>
         </div>
       </form>
-      <Button onClick={googleSignIn}>Sign In With Google</Button>
-      <a href="/sign-up" className="text-blue-500">
+      <Button className="gap-3" onClick={googleSignIn}>
+        
+        <span> Sign In With Google</span>
+        <FaGoogle className='color-blue-500'/>
+        </Button>
+      <a href="/sign-up" className="text-blue-500 p-3">
         No Account Yet? Sign Up
       </a>
     </>

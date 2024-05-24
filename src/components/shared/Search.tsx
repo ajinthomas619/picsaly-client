@@ -6,11 +6,14 @@ import { Input } from '../ui/input';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+import { useSelector } from 'react-redux';
+
 const Search: React.FC = () => {
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [q, setQ] = useState<string>('');
     const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
+    const userData = useSelector((state: any) => state.persisted.user.userData);
 
     const fetchData = useCallback(debounce(async (query: string) => {
         if (query.trim() === '') {
@@ -51,12 +54,12 @@ const Search: React.FC = () => {
         <div>
             
             <Input type="text" value={q} onChange={handleInputChange} placeholder="Search..." />
-            <div>
+            <div >
              
                 {searchPerformed && posts?.length === 0 && users?.length ===0 && <p>No posts found</p>}
                 {posts?.length > 0 && (
                     posts.map(post => (
-                        <div key={post._id}>
+                        <div key={post._id} className='card card-body card-bordered card-normal'>
                             <h3>{post.caption}</h3>
                             <Link to={`/post/${post._id}`}>
                             <img
@@ -69,12 +72,12 @@ const Search: React.FC = () => {
                     ))
                 )}
             </div>
-            <div>
+            <div >
               
                 {searchPerformed && users?.length === 0 && posts.length === 0 && <p>No users found</p>}
                 {users?.length > 0 && (
                     users.map(user => (
-                        <div key={user._id}>
+                        <div key={user._id} className='card card-body card-bordered card-normal'>
 
                             <h3>{user.basicInformation.username}</h3>
                             <Link to={`/profile/${user._id}`}>
@@ -84,6 +87,7 @@ const Search: React.FC = () => {
                       className="w-16 h-16 rounded-full object-cover"
                     />
                     </Link>
+                   
                         </div>
                     ))
                 )}

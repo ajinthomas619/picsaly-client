@@ -62,7 +62,7 @@ console.log("action is ",action);
     if (action === "Create") {
       await createPostFunction(formData);
       dispatch(addPostData(formData));
-      navigate("/")
+       navigate("/")
     } else if (action === "update" && post) {
       console.log("hi");
       
@@ -70,7 +70,7 @@ console.log("action is ",action);
       console.log("form data after submission",formData);
       
       navigate("/")
-      // Dispatch action to update the post in Redux store if needed
+     
     }
   }
   catch(error){

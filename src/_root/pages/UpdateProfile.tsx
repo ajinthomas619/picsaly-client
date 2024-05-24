@@ -3,7 +3,7 @@ import ProfileUploader from "@/components/shared/profileUplloader";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { updateUser, getUser } from "@/redux/slices/userSlices";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -32,15 +32,15 @@ const UpdateProfile = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const userId = userData.finduser._id
+const navigate = useNavigate()
 
-
-  useEffect(() => {
-    if (userId) {
-      navigate("/");
-    } else {
-      navigate("/log-in");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userId) {
+  //     navigate("/update-profile");
+  //   } else {
+  //     navigate("/log-in");
+  //   }
+  // }, []);
 
   useEffect(() => {
     dispatch(getUser());

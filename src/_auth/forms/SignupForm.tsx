@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { SignUpFunction } from "@/utils/api/methods/AuthService/post";
 import { useSelector } from "react-redux";
 import { UserData } from "@/utils/interfaces/interface";
+import toast from "react-hot-toast";
 
 interface FormErrors {
   username?: string;
@@ -23,144 +23,188 @@ const SignupForm: React.FC = () => {
   const [mobile, setMobile] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showToast, setShowToast] = useState<string | null>(null); // For managing toast visibility
 
   const navigate = useNavigate();
-  const Data = useSelector(
-    (state: UserData) => state.persisted.user.userData
-  );
-  useEffect(() => {
-    if (Data?.finduser?._id) {
-      navigate("/");
-    } else {
-      navigate("/log-in");
+  const userData = useSelector((state: UserData) => state.persisted.user.userData);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const isValid = validateForm();
+    if (!isValid) {
+      setShowToast('not valid');
+      return;
     }
-  }, []);
 
-  useEffect(() => {
-    if (formSubmitted) {
-      validateForm();
+    try {
+   
+      const data = {
+        username: username,
+        name: name,
+        email: email,
+        mobile: mobile,
+        password: password,
+        confirmPassword: confirmPassword,
+      };
+      const response = await SignUpFunction(data);
+      console.log("the response",response)
 
-      const timeoutId = setTimeout(() => {
-        setFormSubmitted(false);
-        setFormErrors({});
-      }, 1000);
-
-      return () => clearTimeout(timeoutId);
+      if (response?.data?.status) {
+        setUsername("");
+        setName("");
+        setEmail("");
+        setMobile("");
+        setPassword("");
+        setConfirmPassword("");
+        navigate("/verify-otp");
+      } else {
+        setShowToast("please fill out valid credentials");
+      }
+    } catch (error) {
+      console.error("Registration failed:", (error as Error).message);
+      setShowToast("An error occurred during registration.");
     }
-  }, [username, name, email, password, mobile, confirmPassword, formSubmitted]);
+  };
 
   const validateForm = () => {
     let errors: FormErrors = {};
 
-    if (!username.trim()) {
-      errors.username = 'Username is required';
+    const usernameRegex = /^[a-zA-Z0-9][a-zA-Z0-9 ]*$/;
+    if (!username.trim() ||!usernameRegex.test(username)) {
+      errors.username =
+        "Username should contain only alphanumeric characters and no leading/trailing spaces.";
     }
-    if (!name.trim()) {
-      errors.name = 'Full Name is required';
+
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    if (!name.trim() ||!nameRegex.test(name)) {
+      errors.name =
+        "Full Name should consist of alphabetic characters and spaces only.";
     }
-    if (!email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Invalid email address';
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim() ||!emailRegex.test(email)) {
+      errors.email = "Please enter a valid email address.";
     }
-    if (!password.trim()) {
-      errors.password = 'Password is required';
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%*?&])[A-Za-z\d@$%*?&]{8,}$/;
+    if (!password.trim() ||!passwordRegex.test(password)) {
+      errors.password =
+        "Password should have at least 8 characters including uppercase, lowercase, digits, and special characters.";
     }
-    if (!mobile.trim()) {
-      errors.mobile = 'Mobile is required';
+
+    if (password!== confirmPassword) {
+      errors.confirmPassword = "Passwords do not match.";
     }
-    if (password !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+
+    // Mobile validation
+    const mobileRegex = /^\+?\d{10}$/; 
+    if (!mobile.trim() ||!mobileRegex.test(mobile)) {
+      errors.mobile = "Please enter a valid mobile number.";
     }
 
     setFormErrors(errors);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-
-    try {
-      const data = {
-        username:username,
-        name:name,
-        email:email,
-        mobile:mobile,
-        password:password,
-        confirmPassword:confirmPassword
-
-
-      }
-   const response = await SignUpFunction(data)
-
-      if (response ) {
-     
-        console.log('Registration successful:', response);
-        setUsername('');
-        setName('');
-        setEmail('');
-        setMobile('');
-        setPassword('');
-        setConfirmPassword('');
-
-        navigate('/verify-otp');
-      } else {
-        console.error('Unexpected response structure:', response);
-      }
-    } catch (error) {
-      console.error('Registration failed:', (error as Error).message);
-    }
+    return Object.keys(errors).length === 0; // Return true if no errors
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center">
+    <form onSubmit={handleSubmit} className="form-control">
       <div className="flex justify-center">
-        <img src="/assets/logo.png" alt="logo" className="size-20" />
+        <img src="/assets/logo.png" alt="logo" className="size-20 " />
       </div>
 
       <h2 className="mb-10 text-center mt-5 font-bold text-3xl">Sign up</h2>
-      <div className="flex flex-col items-center w-full max-w-md">
-
+      <div className="flex flex-col items-center w-full max-w-md ">
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="username" className="block mb-1">Username</label>
-          <input id="username" className="border w-full" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          {formErrors.username && <p className="text-red-500 text-xs">{formErrors.username}</p>}
+          <label htmlFor="username" className="block mb-1">
+            Username
+          </label>
+          <input
+            id="username"
+            className="input input-ghost input-bordered input-xs"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          {formErrors.username && toast.error(formErrors.username)}
         </div>
 
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="name" className="block mb-1">Full Name</label>
-          <input id="name" className="border w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-          {formErrors.name && <p className="text-red-500 text-xs">{formErrors.name}</p>}
+          <label htmlFor="name" className="block mb-1">
+            Full Name
+          </label>
+          <input
+            id="name"
+            className="input input-ghost input-bordered input-xs"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {formErrors.name && toast.error(formErrors.name)}
         </div>
 
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="email" className="block mb-1">Email</label>
-          <input id="email" className="border w-full" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          {formErrors.email && <p className="text-red-500 text-xs">{formErrors.email}</p>}
+          <label htmlFor="email" className="block mb-1">
+            Email
+          </label>
+          <input
+            id="email"
+            className="input input-ghost input-bordered input-xs"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {formErrors.email && toast.error(formErrors.email)}
         </div>
 
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="mobile" className="block mb-1">Mobile</label>
-          <input id="mobile" className="border w-full" type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
-          {formErrors.mobile && <p className="text-red-500 text-xs">{formErrors.mobile}</p>}
+          <label htmlFor="mobile" className="block mb-1">
+            Mobile
+          </label>
+          <input
+            id="mobile"
+            className="input input-ghost input-bordered input-xs"
+            type="text"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+          />
+          {formErrors.mobile && toast.error(formErrors.mobile)}
         </div>
 
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="password" className="block mb-1">Password</label>
-          <input id="password" className="border w-full" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          {formErrors.password && <p className="text-red-500 text-xs">{formErrors.password}</p>}
+          <label htmlFor="password" className="block mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            className="input input-ghost input-bordered input-xs"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {formErrors.password && toast.error(formErrors.password)}
         </div>
 
         <div className="mb-5 w-full max-w-md">
-          <label htmlFor="confirmPassword" className="block mb-1">Confirm Password</label>
-          <input id="confirmPassword" className="border w-full" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-          {formErrors.confirmPassword && <p className="text-red-500 text-xs">{formErrors.confirmPassword}</p>}
+          <label htmlFor="confirmPassword" className="block mb-1">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            className="input input-ghost input-bordered input-xs"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          {formErrors.confirmPassword && toast.error(formErrors.confirmPassword)}
         </div>
 
         <Button type="submit">Sign up</Button>
-        <a href="/" className="text-blue-500">Already A User? Login</a>
-
+       
+        <a href="/log-in" className="text-blue-500">
+          Already A User? Login
+        </a>
       </div>
     </form>
   );

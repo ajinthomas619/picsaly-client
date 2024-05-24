@@ -12,7 +12,7 @@ const People = () => {
 
   useEffect(() => {
     if (id) {
-      navigate("/");
+      navigate("/people");
     } else {
       navigate("/log-in");
     }
