@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export interface UserData {
     persisted:any;
     email:string;
@@ -32,4 +34,25 @@ export interface CommentData {
     name:String;
     postId: string;
     createdAt: Date;
+}
+export interface Message {
+    shouldShake:boolean;
+    _id:string;
+    senderId:string;
+    reciverId:string;
+    message:string;
+    createdAt:Date;
+    updatedAt:Date;
+}
+
+export interface Conversation {
+    name:string;
+    error?:AxiosError;
+    profilePicture:string;
+    conversations:[Conversation]
+    _id:string;
+    participants:[UserData];
+    messages:[Message];
+    createdAt:Date;
+    updatedAt:Date;
 }

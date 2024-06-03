@@ -10,11 +10,14 @@ import { Routes, Route } from 'react-router-dom';
 import AdminAuthLayout from '../_auth/AdminAuthLayout';
 import AdminloginForm from '../_auth/forms/AdminloginForm';
 import ProtectedRoute from './protectedRoute'; // Ensure the import path matches where your ProtectedRoute component is located
+import ChatScreen from '@/_root/pages/ChatScreen';
+import useListenMessages from '@/hooks/useListenMessages';
 type PostCardProps = {
   post: any;
 };
 
 const UserRoutes = () => {
+  useListenMessages()
   return (
     <main className="flex h-screen">
       <Routes>
@@ -41,6 +44,8 @@ const UserRoutes = () => {
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/profile/:id/*" element={<Profile />} />
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
+          <Route path="/message" element={<ChatScreen />} />
+              
         </Route>
 
         <Route path='/admin' index element={<AdminLayout />} />

@@ -116,11 +116,11 @@ const Profile = () => {
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={currentUser.posts || 0} label="Posts" />
               <StatBlock
-                value={currentUser?.activity?.followers || 0}
+                value={currentUser?.socialConnections?.Followers.length || 0}
                 label="Followers"
               />
               <StatBlock
-                value={currentUser?.activity?.following || 0}
+                value={currentUser?.socialConnections?.Following.length || 0}
                 label="following"
               />
             </div>

@@ -99,7 +99,7 @@ const SignupForm: React.FC = () => {
     }
 
     // Mobile validation
-    const mobileRegex = /^\+?\d{10}$/; 
+    const mobileRegex = /^(\+91[\-\s]?)?[789]\d{9}$/; 
     if (!mobile.trim() ||!mobileRegex.test(mobile)) {
       errors.mobile = "Please enter a valid mobile number.";
     }

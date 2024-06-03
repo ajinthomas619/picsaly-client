@@ -16,13 +16,11 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.persisted.user.userData);
-  
 
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [comments, setComments] = useState<CommentData[]>([]);
-  const [commentLiked, setCommentLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -31,7 +29,13 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editingCommentText, setEditingCommentText] = useState<string>("");
-  const [commentLikes, setCommentLikes] = useState<{ [key: string]: boolean }>({});
+  const [commentLikes, setCommentLikes] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [replyLikes, setReplyLikes] = useState<{ [key: string]: boolean }>({});
+  const [showReplies, setShowReplies] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -43,15 +47,44 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         setPostData(fetchedPostData);
         setLikeCount(fetchedPostData.Likes.length);
         setComments(fetchedPostData.comments);
-      } catch (error) {
+        const initialCommentLikes = fetchedPostData.comments.reduce(
+          (acc: { [key: string]: boolean }, comment: CommentData) => {
+            acc[comment._id] = comment?.likes.includes(userData.finduser._id);
+            return acc;
+          },
+          {}
+        );
+        console.log(post)
+      const like = post.Likes.map((item) => item.userId)
+      console.log("the likes",like)
+      for(let keys in like){
+       if(like[keys] === userData.finduser._id){
+        setLiked(true)
+       } 
+      }
+       
+      setCommentLikes(initialCommentLikes);
+      const saved = userData.finduser.activity.saved
+      console.log("the saved posts",saved)
+  
+      for(let keys in saved){
+        if(saved[keys] === post._id){
+          setSaved(true)
+      }
+      }
+
+      
+    }catch (error) {
         console.error("Error fetching post data:", error);
       }
     };
 
-    fetchPostData();
-  }, [post._id,comments]);
 
- 
+
+    fetchPostData();
+  }, [post._id,userData.finduser._id]);
+
+
 
   const handleLike = async () => {
     try {
@@ -88,13 +121,14 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           userId: userData.finduser._id,
           name: userData.finduser.basicInformation.username,
           comment: commentInput,
-          profile:userData.finduser.profile.profileUrl
+          profile: userData.finduser.profile.profileUrl,
         }
       );
-      console.log("the response of add comment", response);
-
+     
       if (response.data.status) {
-        setComments((prevComments) => [...prevComments, response.data.comment]);
+        console.log('New comment added response:', response.data.comment);
+        const newComment = response.data.comment
+        setComments(newComment);
         setCommentInput("");
         toast.success("Comment added successfully.");
       } else {
@@ -108,8 +142,6 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      console.log("commentid", commentId);
-
       const response = await axios.delete(
         `http://localhost:3000/api/delete-comment/${commentId}`,
         {
@@ -118,6 +150,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           },
         }
       );
+
       if (response.data.status) {
         setComments((prevComments) =>
           prevComments.filter((comment) => comment._id !== commentId)
@@ -140,7 +173,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/replytocomment/${commentId}`,
+        `http://localhost:3000/api/reply-to-comment/${commentId}`,
         {
           postId: post._id,
           userId: userData.finduser._id,
@@ -150,6 +183,16 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
       );
 
       if (response.data.status) {
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  replies: [...comment.replies, response.data.reply],
+                }
+              : comment
+          )
+        );
         setReplyValue("");
         setReplyingTo(null);
         toast.success("Reply successful.");
@@ -178,9 +221,10 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         `http://localhost:3000/api/edit-comment/${post._id}`,
         {
           comment: editingCommentText,
-          commentid:editingCommentId
+          commentid: editingCommentId,
         }
       );
+
       if (response.data.status) {
         setComments((prevComments) =>
           prevComments.map((comment) =>
@@ -203,23 +247,27 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
   const handleLikeComment = async (commentId: string) => {
     try {
-      
       const liked = commentLikes[commentId] || false;
       const response = await axios.post(
         `http://localhost:3000/api/like-comment/${commentId}`,
         {
-          liked:!liked,
+          liked: !liked,
           userId: userData.finduser._id,
           postId: post._id,
-          withCredentials: true,
         }
       );
 
       if (response.data.status) {
+        
         setCommentLikes((prevLikes) => ({
           ...prevLikes,
           [commentId]: !liked,
         }));
+
+
+
+     
+        
         console.log("Comment liked successfully");
       } else {
         toast.error("Failed to like comment. Please try again.");
@@ -227,6 +275,32 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
     } catch (error) {
       console.error("Error liking comment:", error);
       toast.error("Error liking comment. Please try again.");
+    }
+  };
+
+  const handleLikeReply = async (replyId: string) => {
+    try {
+      const liked = replyLikes[replyId] || false;
+      const response = await axios.post(
+        `http://localhost:3000/api/like-reply/${replyId}`,
+        {
+          liked: !liked,
+          userId: userData.finduser._id,
+        }
+      );
+
+      if (response.data.status) {
+        setReplyLikes((prevLikes) => ({
+          ...prevLikes,
+          [replyId]: !liked,
+        }));
+        console.log("Reply liked successfully");
+      } else {
+        toast.error("Failed to like reply. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error liking reply:", error);
+      toast.error("Error liking reply. Please try again.");
     }
   };
 
@@ -248,18 +322,22 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
       toast.error("Error saving post. Please try again.");
     }
   };
-
   const fetchUser = async (id: any) => {
     try {
-      console.log("the id", id);
       const response = await axios.get(
         `http://localhost:3000/api/getUserById/${id}`
       );
-      console.log("the user dataa", response.data.data);
       setUser(response.data.data);
     } catch (error) {
-      console.log("error in getting user", error);
+      console.error("Error fetching user:", error);
     }
+  };
+
+  const toggleReplies = (commentId: string) => {
+    setShowReplies((prevShowReplies) => ({
+      ...prevShowReplies,
+      [commentId]: !prevShowReplies[commentId],
+    }));
   };
 
   const closeModal = () => {
@@ -267,13 +345,13 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
   };
 
   return (
-    <div className="flex justify-between items-center z-20">
+    <div className="flex justify-between items-center z-24 mt-5">
       <div className="flex gap-2 mr-5">
         <img
           src={!liked ? "/assets/icons/like.svg" : "/assets/icons/liked.svg"}
           alt="like"
-          width={20}
-          height={20}
+          width={24}
+          height={24}
           className="cursor-pointer"
           onClick={handleLike}
         />
@@ -283,8 +361,8 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         <img
           src="/assets/icons/chat.svg"
           alt="comment"
-          width={20}
-          height={20}
+          width={24}
+          height={24}
           className="cursor-pointer"
           onClick={() => setShowModal(true)}
         />
@@ -293,20 +371,20 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         <img
           src={!saved ? "/assets/icons/save.svg" : "/assets/icons/saved.svg"}
           alt="save"
-          width={20}
-          height={20}
+          width={24}
+          height={24}
           className="cursor-pointer"
           onClick={handleSavePost}
         />
       </div>
       {showModal && (
         <Modal onClose={closeModal}>
-          <div className="p-2 max-w-3xl mx-auto ">
+          <div className="p-2 max-w-3xl mx-auto">
             <h2 className="text-lg font-bold mb-2">Comments</h2>
             <button onClick={closeModal}>
               <X />
             </button>
-            <div className="mb-4 overflow-auto h-80 ">
+            <div className="mb-4 overflow-auto h-80">
               {comments.map((comment) => (
                 <div key={comment._id}>
                   <div className="text-sm mb-2 flex items-center">
@@ -321,7 +399,9 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                       onLoad={() => fetchUser(comment.userId)}
                     />
                     <p className="font-bold gap-2 px-2">{comment.username}</p>
-                    <p className="text-semibold text-xl text-indigo-400 border rounded-md">"{comment.text}"</p>
+                    <p className="text-semibold text-xl text-indigo-400 border rounded-md">
+                      "{comment.text}"
+                    </p>
                     {comment.userId === userData.finduser._id && (
                       <>
                         <button
@@ -338,7 +418,9 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                         </button>
                         <button
                           className="ml-2"
-                          onClick={() => handleEditComment(comment._id, comment.text)}
+                          onClick={() =>
+                            handleEditComment(comment._id, comment.text)
+                          }
                         >
                           <img
                             src="/assets/icons/edit.svg"
@@ -348,37 +430,96 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                         </button>
                       </>
                     )}
-                  <button
-                    className="text-blue-500 ml-auto"
-                    onClick={() => handleLikeComment(comment._id)}
-                  >
-                    <img
-                      src={
-                        !commentLikes[comment._id] ? "/assets/icons/like.svg" : "/assets/icons/liked.svg"
-                      }
-                      alt="like"
-                      width={24}    
-                      height={24}
-                      className="cursor-pointer"
-                    />
-                  </button>
-                  <button
-                    className="ml-2"
-                    onClick={() => setReplyingTo(comment._id)}
-                  >
-                    Reply
-                  </button>
-                </div>
+                    <button
+                      className="text-blue-500 ml-auto"
+                      onClick={() => handleLikeComment(comment._id)}
+                    >
+                      <img
+                        src={
+                          !commentLikes[comment._id]
+                            ? "/assets/icons/like.svg"
+                            : "/assets/icons/liked.svg"
+                        }
+                        alt="like"
+                        width={24}
+                        height={24}
+                        className="cursor-pointer"
+                      />
+                    </button>
+                    <button
+                      className="ml-2"
+                      onClick={() => setReplyingTo(comment._id)}
+                    >
+                      Reply
+                    </button>
+
+                    <button
+                      onClick={() => toggleReplies(comment._id)}
+                      className="flex flex-col ml-5 text-indigo-500"
+                    >
+                      {showReplies[comment._id]
+                        ? "Hide Replies"
+                        : "Show Replies"}{" "}
+                      ({comment?.replies?.length})
+                    </button>
+                  </div>
+                  {showReplies[comment._id] && (
+                    <div className="replies">
+                      {comment.replies && comment.replies.length > 0 && (
+                        <div className="ml-5 ">
+                          {comment.replies.map((reply) => (
+                            <div
+                              key={reply._id}
+                              className="text-sm mb-2 flex items-center border "
+                            >
+                              <img
+                                src={"https://avatar.iran.liara.run/public/boy"}
+                                alt={`${reply.username}'s profile`}
+                                className="w-8 h-8 mr-2 rounded-full"
+                              />
+                              <p className="font-bold gap-2 px-2">
+                                {reply.username}
+                              </p>
+                              <p className="text-semibold text-lg text-indigo-400">
+                                "{reply.reply}"
+                              </p>
+                              <button
+                                className="text-blue-500 ml-auto"
+                                onClick={() => handleLikeReply(reply._id)}
+                              >
+                                <img
+                                  src={
+                                    !replyLikes[reply._id]
+                                      ? "/assets/icons/like.svg"
+                                      : "/assets/icons/liked.svg"
+                                  }
+                                  alt="like"
+                                  width={24}
+                                  height={24}
+                                  className="cursor-pointer"
+                                />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                  )}
+                </div>
               ))}
             </div>
             {replyingTo && (
               <div className="mt-4 w-full">
-                <form onSubmit={(e) => handleReply(e, replyingTo)} className="space-y-4">
+                <form
+                  onSubmit={(e) => handleReply(e, replyingTo)}
+                  className="space-y-4"
+                >
                   <textarea
                     value={replyValue}
                     onChange={(e) => setReplyValue(e.target.value)}
-                    placeholder={`Reply to ${comments.find((c) => c._id === replyingTo)?.username}`}
+                    placeholder={`Reply to ${
+                      comments.find((c) => c._id === replyingTo)?.username
+                    }`}
                     className="w-full rounded-md p-3 border border-gray-300 focus:outline-none focus:border-blue-500"
                     required
                   />
@@ -439,4 +580,3 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 };
 
 export default PostStats;
-

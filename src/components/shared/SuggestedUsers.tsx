@@ -37,7 +37,7 @@ const SuggestedUsers = () => {
             {users.map((user) => (
               <li
                 key={user?.id}
-                className="bg-gray-100 rounded-lg p-4 mb-5 shadow-sm hover:bg-gray-200 transition duration-150 ease-in-out"
+                className="bg-gray-100 rounded-lg p-4 mb-5 shadow-sm hover:bg-gray-200 transition duration-150 ease-in-out "
               >
                 {user?.profile?.profileUrl && (
                   <Link to={`/profile/${user?._id}`} className="shrink-0">
@@ -48,12 +48,12 @@ const SuggestedUsers = () => {
                     />
                   </Link>
                 )}
-                <div className="flex flex-row items-center gap-4 w-full">
+                <div className="flex flex-row items-center gap-4 w-full  ">
                   <p className="font-medium text-lg text-gray-900">
-                    {user?.basicInformation?.email}
-                  </p>
-                  <p className="text-sm text-gray-600">
                     {user?.basicInformation?.username}
+                  </p>
+                  <p className="text-sm text-gray-600 md:textarea-xs " >
+                    {user?.basicInformation?.email}
                   </p>
                 </div>
                 <Follow id={user._id} currentUserId ={userData.finduser._id} />
