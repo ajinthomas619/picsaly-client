@@ -39,7 +39,7 @@ const PostCard = ({ post }: PostCardProps) => {
     : "";
 
   return (
-    <div className="post-card flex flex-col px-6 py-20  ">
+    <div className="post-card flex flex-col px-6 py-20 md:ml-48  ">
       {userData && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">

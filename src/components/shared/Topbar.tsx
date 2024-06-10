@@ -32,21 +32,21 @@ const Topbar = () => {
       }
   }
   return (
-   <section className="topbar ">
-    <div className="flex flex-row  justify-between py-4 px-5">
+   <section className="topbar bg-slate-100 fixed w-full">
+    <div className="flex flex-row  justify-between py-4 px-5 ">
      <Link to="/" className='flex gap-3 items-center'>
      <img src="/assets/logo.png"
       alt="logo"
-      width={130}
-      height={325}
+      width={36}
+      height={36}
       />
      </Link>
      <Search/>
      <div className="flex gap-4 " >
-        <Button variant="ghost" className="shad-button_ghost" onClick={logout}> Logout</Button>
+        <Button variant="ghost" className="shad-button_ghost mt-1" onClick={logout}> Logout</Button>
 
        <Link to= {`/profile/${currentUser?.finduser._id} `} className="flex-center gap-3">
-       <User className="h-8 w-8 rounded-full"/>
+       <User className="h-4 w-4 rounded-full"/>
         {currentUser.finduser.basicInformation.username}
         </Link>
      </div>

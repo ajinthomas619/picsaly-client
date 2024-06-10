@@ -58,12 +58,13 @@ const LoginForm: React.FC = () => {
         console.log("Registration successful:", response.data);
         dispatch(addUser(response.data.user));
       } else {
+        toast.error("invalid credentials")
         console.error("Unexpected response structure:", response);
       }
     } catch (error) {
+      toast.error("Login Failed please check your credentials")
       console.error("Registration failed:", error);
       setError("Login failed. Please check your credentials.");
-      toast.error("Login Failed please check your credentials")
     }
   };
 

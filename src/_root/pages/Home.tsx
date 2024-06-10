@@ -36,7 +36,7 @@ const Home = () => {
         const response = await getAllPostFunction();
 
         if (response && response.data && response.data.data) {
-          setPosts(response.data.data);
+          setPosts(response.data.data.reverse());
         }
       } catch (error) {
         console.error("Error while Fetching posts", error);
@@ -51,8 +51,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className=" flex flex-1">
-      <div className="home-container">
+    <div className=" flex flex-1 ">
+      <div className="home-container ">
         
         <div className="home-post">
           

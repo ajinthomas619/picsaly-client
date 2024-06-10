@@ -1,36 +1,21 @@
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-
-
+import Navbar from "@/admin/components/Navbar";
+import Sidebar from "@/admin/components/Sidebar";
+import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
-    const navigate = useNavigate()
-   
-        const logout = async () => {
-            try {
-                await axios.get("http://localhost:3000/api/logout");
-                navigate('/adminlogin');
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-    
-   
-  
   return (
-    <div>
-        
-        
-        
-        <h1>Admin Page</h1>
-        <Button onClick={logout}>LogOut</Button>
-      
-
-        
+    <div className="flex flex-col min-h-screen w-full max-w-screen">
+      <Navbar />
+      <div className="md:flex flex-1 h-full">
+        <div className="hidden md:block w-1/5">
+          <Sidebar />
         </div>
-  )
-}
+        <section className="flex flex-1 h-full bg-gray-100 p-4">
+          <Outlet />
+        </section>
+      </div>
+    </div>
+  );
+};
 
-export default AdminLayout
+export default AdminLayout;

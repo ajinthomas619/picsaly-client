@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { addUser } from "@/redux/slices/userSlices";
+import toast from "react-hot-toast";
 
 const EditProfile = () => {
   const [user, setUser] = useState({});
@@ -10,13 +11,14 @@ const EditProfile = () => {
     username: "",
     bio: "",
     email: "",
-  });
-  const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { id } = useParams();
-
-  useEffect(() => {
+    });
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { id } = useParams();
+  
+    
+    useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/getUserById/${id}`);
@@ -48,6 +50,14 @@ const EditProfile = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.username) {
+      toast.error("Username is required");
+      return;
+    }
+    if (formData.username.length < 3 || formData.username.length > 20) {
+      toast.error("Username must be between 3 and 20 characters long");
+      return;
+    }
     try {
       const userId = user?.data?._id;
       if (!userId) {
@@ -67,7 +77,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center ">
       <button onClick={() => setShowModal(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Edit Profile
       </button>

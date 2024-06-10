@@ -29,7 +29,7 @@ const LeftSideBar = () => {
       }
   }
   return (
-  <nav className="=leftsidebar">
+  <nav className="=leftsidebar md:fixed  ">
     <div className="flex flex-col gap-11 px-2">
     <Link to="/" className='flex gap-3 items-center'>
      {/* <img src="/assets/logo.png"
@@ -41,8 +41,8 @@ const LeftSideBar = () => {
       
      </Link>
      <Link to={`/profile/${userData?.finduser._id}`} className="flex gap-3 items-center">
-      <User className="h-14 w-14 rounded-full"/>
-      <div className=" flex flex-col">
+      <User className="h-14 w-14 rounded-full mt-16"/>
+      <div className=" flex flex-col mt-20">
         <p className="body-bold"> {userData.finduser.basicInformation.fullname}</p>
         <p className="small-regular text-light-3">{userData.finduser.basicInformation.username}</p>
 

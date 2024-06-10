@@ -27,9 +27,10 @@ export const useSocketContext  = () => {
         let newSocket : Socket | undefined = undefined
 
         if(userData){
+            const userId = userData?.userData?.userData?.finduser?._id || userData?.userData?.finduser?._id;
             newSocket = io("http://localhost:3001",{
                 query:{
-                    userId:userData.userData.finduser._id,
+                    userId:userId,
                 }
               
             })

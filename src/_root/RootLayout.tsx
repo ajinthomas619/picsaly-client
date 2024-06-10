@@ -10,11 +10,11 @@ const RootLayout = () => {
       <Topbar />
       <div className="md:flex flex-1 h-full">
         {/* Left Sidebar - Hidden in Mobile */}
-        <div className="hidden md:block">
+        <div className="hidden md:block ">
           <LeftSideBar />
         </div>
 
-        <section className="flex flex-1 h-full">
+        <section className="flex flex-1 h-full ">
           <Outlet />
         </section>
       </div>

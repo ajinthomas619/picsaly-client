@@ -52,4 +52,9 @@ export const sidebarLinks = [
       route: "/create-post",
       label: "Create",
     },
+    {
+      imgURL:"/assets/icons/chat.svg",
+      route :"/message",
+      label:"Message"
+    }
   ];

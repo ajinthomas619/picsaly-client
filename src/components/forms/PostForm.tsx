@@ -19,6 +19,7 @@ import {Button} from"../ui/button"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PostData } from "@/utils/interfaces/interface";
+import toast from "react-hot-toast";
 type PostFormProps = {
   post?: PostData;
   action: "Create" | "update";
@@ -47,8 +48,13 @@ const PostForm = ({ post, action }: PostFormProps) => {
       createdBy: post?.createdBy || user.finduser._id,
     },
   });
+  
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (action === "Create" && (!values.image || values.image.length === 0)) {
+      toast.error("Please add an image.");
+      return;
+    }
     try{
     const formData = new FormData();
     formData.append("image", values.image[0]);
@@ -81,7 +87,7 @@ console.log("action is ",action);
 
   return (
     <Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl ml-48 mt-20">
       <Textarea
         className="shad-textarea custom-scrollbar"
         placeholder="Caption"

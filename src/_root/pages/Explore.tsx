@@ -67,7 +67,7 @@ const ExplorePage = () => {
   console.log("postsssssss", posts);
 
   return (
-    <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div className="mx-auto max-w-2xl py-16 px-4  sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 ml-48 mt-20  ">
       <div className="flex w-full max-w-sm space-x-2 mb-10">
         <Input
           value={q}

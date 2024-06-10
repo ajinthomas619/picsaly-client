@@ -52,47 +52,53 @@ const Search: React.FC = () => {
     
     return (
         <div>
-            
-            <Input type="text" value={q} onChange={handleInputChange} placeholder="Search..." />
-            <div >
-             
-                {searchPerformed && posts?.length === 0 && users?.length ===0 && <p>No posts found</p>}
-                {posts?.length > 0 && (
-                    posts.map(post => (
-                        <div key={post._id} className='card card-body card-bordered card-normal'>
-                            <h3>{post.caption}</h3>
-                            <Link to={`/post/${post._id}`}>
-                            <img
-                      src={`http://localhost:3000/profile/${post.image}`}
-                      alt={`${post.image}'s profile`}
-                      className="w-32 h-32  object-cover"
-                    />
+        <details className="dropdown">
+          <summary className="m-1 input h-5">Search</summary>
+          <div className="p-4 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80">
+            <Input
+              type="text"
+              value={q}
+              onChange={handleInputChange}
+              placeholder="Search..."
+              className="input input-bordered w-full mb-4"
+            />
+            <div className='border rounded-lg bg-purple-100 p-4 mb-4'>
+              {searchPerformed && posts?.length === 0 && users?.length === 0 && <p>No posts found</p>}
+              {posts?.length > 0 && (
+                posts.map(post => (
+                  <div key={post._id} className='p-4 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80'>
+                    <h3>{post.caption}</h3>
+                    <Link to={`/post/${post._id}`}>
+                      <img
+                        src={`http://localhost:3000/profile/${post.image}`}
+                        alt={`${post.image}'s profile`}
+                        className="w-32 h-32 object-cover"
+                      />
                     </Link>
-                        </div>
-                    ))
-                )}
+                  </div>
+                ))
+              )}
             </div>
-            <div >
-              
-                {searchPerformed && users?.length === 0 && posts.length === 0 && <p>No users found</p>}
-                {users?.length > 0 && (
-                    users.map(user => (
-                        <div key={user._id} className='card card-body card-bordered card-normal'>
-
-                            <h3>{user.basicInformation.username}</h3>
-                            <Link to={`/profile/${user._id}`}>
-                            <img
-                      src={`http://localhost:3000/profile/${user.profile.profileUrl}`}
-                      alt={`${user?.basicInformation?.username}'s profile`}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
+            <div className='border rounded-lg bg-purple-100 p-4'>
+              {searchPerformed && users?.length === 0 && posts?.length === 0 && <p>No users found</p>}
+              {users?.length > 0 && (
+                users.map(user => (
+                  <div key={user._id} className='card card-body card-bordered card-normal mb-2'>
+                    <h3>{user.basicInformation.username}</h3>
+                    <Link to={`/profile/${user._id}`}>
+                      <img
+                        src={`http://localhost:3000/profile/${user.profile.profileUrl}`}
+                        alt={`${user?.basicInformation?.username}'s profile`}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
                     </Link>
-                   
-                        </div>
-                    ))
-                )}
+                  </div>
+                ))
+              )}
             </div>
-        </div>
+          </div>
+        </details>
+      </div>
     );
 };
 

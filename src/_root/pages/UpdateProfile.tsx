@@ -94,7 +94,7 @@ const navigate = useNavigate()
   };
 
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 ml-48 mt-24">
       <div className="common-container w-full items-center">
         <div className="max-w-5xl flex-start gap-3 justify-start w-full items-center">
           <Form {...form}>

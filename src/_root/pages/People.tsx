@@ -24,7 +24,7 @@ const People = () => {
         console.log("user data", userData);
        
         console.log("the user id", id);
-        const res = await axios.get(`http://localhost:3000/api/getAllUsers/${id}`);
+        const res = await axios.get(`http://localhost:3000/api/getAllUsers`);
         console.log("the actual response", res);
         console.log("all users", res.data.data);
         setUsers(res.data.data);
@@ -37,7 +37,7 @@ const People = () => {
   }, [userData]);
 
   return (
-    <div className="common-container mx-auto max-w-4xl p-4">
+    <div className="common-container mx-auto max-w-4xl p-4 mt-20">
       <div className="user-container bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-6 text-gray-800">All Users</h2>
         <ul className="user-grid space-y-4">

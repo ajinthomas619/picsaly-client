@@ -1,4 +1,5 @@
 import { Outlet,Navigate } from "react-router-dom"
+import AdminloginForm from "./forms/AdminloginForm"
 
 const AdminAuthLayout = () => {
   const isAuthenticated = false
@@ -16,7 +17,7 @@ const AdminAuthLayout = () => {
           alt="sideimage"
           className="hidden xl:block h-screen w-1/2 object-cover bg-no-repeat" />
 
-         
+        
       
          </>
          
