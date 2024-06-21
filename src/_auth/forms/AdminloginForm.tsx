@@ -2,6 +2,8 @@ import  { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch,useSelector } from "react-redux";
+import { addAdmin,clearAdmin } from "@/redux/slices/adminSlice";
 
 
 
@@ -9,6 +11,8 @@ const AdminloginForm = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const admin = useSelector((state:any) => state.persisted.admin.adminData)
   
     useEffect(() => {}, []);
 
@@ -16,21 +20,24 @@ const AdminloginForm = () => {
         e.preventDefault();
         try {
             const userData ={email,password}
+
+            console.log("the admin data",admin)
          
           const response = await axios.post(
             "http://localhost:3000/api/adminlogin",
           userData,
             { withCredentials: true }
           );
-       0 
           if (response && response.data) {
             console.log("Registration successful:", response.data);
+            dispatch(clearAdmin())
             navigate("/admin");
+            dispatch(addAdmin(userData))
           } else {
             console.error("Unexpected response structure:", response);
           }
         } catch (error) {
-          console.error("Registration failed:");
+          console.error("Registration failed:",error);
         }
         setEmail("");
         setPassword("");

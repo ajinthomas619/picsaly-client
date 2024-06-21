@@ -21,8 +21,7 @@ const useListenMessages = () => {
     const userData = useSelector(
         (state:UserData) => state.persisted.user.userData
     )
-    console.log("the user data",userData)
-    console.log("the selected conversation",selectedConversation)
+
     useEffect(() => {
         const handleNewMessage = (newMessage:Message) => {
             console.log("the message recieved",newMessage )
@@ -41,7 +40,7 @@ const useListenMessages = () => {
                         withCredentials:true
                     })
                     console.log("ther response is",response)
-                    setMessages(response.data)
+                    setMessages(response.data.conversation.messages)
                 }
                 catch(error){
                     console.log(error)
@@ -59,11 +58,7 @@ const useListenMessages = () => {
             }
            
         }
-    },[socket,
-        setMessages,
-        messages,
-        selectedConversation?._id,
-        userData.finduser,setUnreadMessages,unreadMessages])
+    },[socket,setMessages,messages,userData.finduser?._id,unreadMessages,selectedConversation?._id,setUnreadMessages])
      
 }
 export default useListenMessages

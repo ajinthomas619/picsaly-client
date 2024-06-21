@@ -2,24 +2,24 @@ import React, { useEffect, useRef } from "react";
 import useGetMessages from "@/hooks/useGetMessages";
 import MessageSkeleton from "./MessageSkelton";
 import Message from "./Message";
-import useListenMessages from "@/hooks/useListenMessages";
+
 
 const Messages: React.FC = () => {
     const { messages, loading } = useGetMessages();
-    console.log("before use listen messages");
-    
- 
-    console.log("after use listen messages");
+  
     
     const lastMessageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        setTimeout(() => {
         lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+        },100)
     }, [messages]);
 
     return (
         <div className="px-4 flex-1 overflow-auto">
-            { messages.length && (
+            {!loading &&
+             messages.length && (
                 
                 messages.map((message, ind) => {
                     const isLastMessage = ind === messages.length - 1;
@@ -30,6 +30,7 @@ const Messages: React.FC = () => {
                     );
                 })
             )}
+            
             </div>
         );
 };

@@ -15,8 +15,7 @@ const LeftSideBar = () => {
   const { pathname } = useLocation()
 
   const userData = useSelector( (state : UserData )=> state.persisted.user.userData);
-  console.log("userData:",userData);
-  
+
   const navigate = useNavigate()
   const logout =async()=>{
       try{

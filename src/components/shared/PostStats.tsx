@@ -54,9 +54,9 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           },
           {}
         );
-        console.log(post)
+      
       const like = post.Likes.map((item) => item.userId)
-      console.log("the likes",like)
+    
       for(let keys in like){
        if(like[keys] === userData.finduser._id){
         setLiked(true)
@@ -65,7 +65,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
        
       setCommentLikes(initialCommentLikes);
       const saved = userData.finduser.activity.saved
-      console.log("the saved posts",saved)
+  
   
       for(let keys in saved){
         if(saved[keys] === post._id){
@@ -96,16 +96,45 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           liked: !liked,
         }
       );
+      
 
       if (response.data.status) {
         setLiked((prevLiked) => !prevLiked);
         setLikeCount(response.data.likes);
+      }
+      if(response.data.message == 'liked'){
+        sendNotification("likePostNotification","like")
+      }
+      else if(response.data.message = "like removed"){
+        sendNotification("unlikePostNotification","like")
       }
     } catch (error) {
       console.error("Error liking post:", error);
       toast.error("Failed to like post. Please try again.");
     }
   };
+
+  const sendNotification = async (message: string,notificationType:string) => {
+    try {
+      console.log("the notification type",notificationType)
+      const data = {
+        sender_id:userData.finduser?._id,
+        receiver_id:post.createdBy?._id,
+        notificationType:notificationType,
+        postId:post._id,
+        postImage:`http://localhost:3000/profile/${post?.image[0]}` 
+      }
+      const response = await axios.post("http://localhost:3000/api/notification", { message,data });
+      if (response.status === 200) {
+        console.log("Notification sent successfully");
+      } else {
+        console.error("Failed to send notification");
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
+  
 
   const handleAddComment = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -130,6 +159,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         const newComment = response.data.comment
         setComments(newComment);
         setCommentInput("");
+        sendNotification("commentPostNotification","comment")
         toast.success("Comment added successfully.");
       } else {
         toast.error("Failed to add comment. Please try again.");

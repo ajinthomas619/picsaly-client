@@ -24,7 +24,7 @@ const useGetConversations = () => {
             setLoading(true)
             try{
                 const following = userData.finduser.socialConnections.Following
-                console.log("the following",following)
+                
 
                 const response = await axios.post(`http://localhost:3000/api/get-conversations/${userData.finduser._id}`,
                 {following},
@@ -35,7 +35,7 @@ const useGetConversations = () => {
       
         
         setConversations(data)
-        console.log("conversations",response.data)
+       
         if(data.error){
             throw new Error(data.error)
         }
@@ -49,7 +49,7 @@ const useGetConversations = () => {
             }
         }
         getConversations()
-    },[userData])
+    },[userData.finduser.socialConnections.Following,messages])
     return{loading,conversations}
 }
 

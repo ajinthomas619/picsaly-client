@@ -8,7 +8,7 @@ import { UserData } from "@/utils/interfaces/interface";
 
 const useGetMessages = () => {
     const [loading,setLoading] = useState(true)
-    const {messages,setMessages,selectedConversation,reload} = useConversation()
+    const {messages,setMessages,selectedConversation} = useConversation()
     const userData = useSelector(
         (state:UserData) => state.persisted.user.userData
     )
@@ -20,9 +20,9 @@ const useGetMessages = () => {
                 const response = await axios.post(`http://localhost:3000/api/get-messages/${userData.finduser._id}`,{senderId:selectedConversation?._id},{
                     withCredentials:true
                 })
-             
-                setMessages(response.data.conversation.messages)
-             
+      
+                setMessages(response.data.conversation.messages || response.data.conversation.messages.savedMessage)
+             console.log("the messages is",messages)
             }
             catch(error:any){
                 console.log("error in getMessages",error)
@@ -32,10 +32,10 @@ const useGetMessages = () => {
                 setLoading(false)
             }
         }
-   
+      
         if(selectedConversation?._id) getMessages()
-        },[selectedConversation?._id,setMessages,messages])
+        },[selectedConversation?._id,setMessages,userData.finduser?._id])
 
-    return {reload,loading,messages:useConversation((state => state.messages))}
+    return {messages,loading}
 }
 export default useGetMessages 

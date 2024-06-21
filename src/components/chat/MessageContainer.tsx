@@ -2,14 +2,23 @@ import useConversation from "@/zustand/useConversation";
 import MessageInput from "./MessageInput";
 import { Link } from "react-router-dom";
 import Messages from "./Messages";
+import { Video } from "lucide-react";
+import { generateRandomRoomId } from "@/helper/roomIdCreator";
 
 
 const MessageContainer = () => {
+    const roomId = generateRandomRoomId()
     const {selectedConversation} = useConversation()
+
+    console.log("the selected conversation",selectedConversation)
     return (
  <div className="bg-indigo-100 px-4 py-2 mb-2 flex justify-between">
   <span className="labex-text">To:{selectedConversation?.username}</span>
-  
+  <div className="">
+    <Link to={`/videocall/${roomId}`}>
+    <Video/>
+    </Link>
+  </div>
   <div className="px-4 flex-1">
     <div className="h-[500px] overflow-y-scroll">
         <Messages/>

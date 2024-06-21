@@ -30,7 +30,7 @@ const Saved = () => {
         withCredentials:true
       })
       setPosts(response.data.posts)
-   console.log("res of saved post",response)
+   
     }
     catch(error){
       console.error("Error fetching users:",error)

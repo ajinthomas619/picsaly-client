@@ -8,8 +8,11 @@ const Conversation: React.FC<Props> = ({ conversation, lastIndex }) => {
   const { selectedConversation, setSelectedConversation,unreadMessages,setUnreadMessages } = useConversation();
   const { onlineUsers } = useSocketContext();
 
-  const isSelected = selectedConversation?._id === conversation._id;
   const isOnline = onlineUsers.includes(conversation._id);
+  console.log("the conversation id",conversation._id)
+  console.log("selected conversation id",selectedConversation?._id)
+  const isSelected = selectedConversation?._id === conversation._id;
+  console.log("is selected",isSelected)
 
   useEffect(() => {
  

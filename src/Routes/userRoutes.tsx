@@ -12,14 +12,27 @@ import AdminloginForm from '../_auth/forms/AdminloginForm';
 import ProtectedRoute from './protectedRoute'; // Ensure the import path matches where your ProtectedRoute component is located
 import ChatScreen from '@/_root/pages/ChatScreen';
 import useListenMessages from '@/hooks/useListenMessages';
-type PostCardProps = {
-  post: any;
-};
+import IncomingCall from '@/components/chat/incomingCall';
+import VideoCall from '@/components/chat/videoCall';
+import useListenToVideoCalls from '@/hooks/useListentoVideoCalls';
+import { useState, useEffect } from 'react';
+import Notification from '@/_root/pages/Notification';
 
 const UserRoutes = () => {
-  useListenMessages()
+  useListenMessages();
+  const callDetails = useListenToVideoCalls();
+  const [showIncomingCallModal, setShowIncomingCallModal] = useState(false);
+
+  useEffect(() => {
+    console.log("the casll details",callDetails)
+    if (callDetails) {
+      setShowIncomingCallModal(true);
+    }
+  }, [callDetails]);
+
   return (
     <main className="flex h-screen">
+      {showIncomingCallModal && <IncomingCall callDetails={callDetails} />}
       <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>
@@ -33,7 +46,6 @@ const UserRoutes = () => {
         </Route>
 
         {/* private routes */}
-        
         <Route element={<RootLayout />}>
           <Route path="/" index element={<Home />} />
           <Route path="/explore" element={<Explore />} />
@@ -45,13 +57,18 @@ const UserRoutes = () => {
           <Route path="/profile/:id/*" element={<Profile />} />
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
           <Route path="/message" element={<ChatScreen />} />
-              
+          <Route path="/videocall/:roomId" element={<VideoCall />} />
+          <Route path="/notifications" element={<Notification />} />
+          
         </Route>
 
-        <Route path='/admin' index element={<AdminLayout />} />
+        {/* Protecting Admin routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" index element={<AdminLayout />} />
+        </Route>
       </Routes>
     </main>
   );
-}
+};
 
 export default UserRoutes;

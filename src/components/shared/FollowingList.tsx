@@ -11,7 +11,7 @@ const FollowingList = ({userId}) => {
         const fetchFollowing = async() => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/getFollowing/${userId}`)
-                console.log("the response is ",response)
+          
                 setFollowing(response.data.data)
             } catch (error) {
                 console.error("error in getting following",error)

@@ -39,7 +39,7 @@ const PostCard = ({ post }: PostCardProps) => {
     : "";
 
   return (
-    <div className="post-card flex flex-col px-6 py-20 md:ml-48  ">
+    <div className="post-card flex flex-col px-6 py-20 md:ml-96 md:mr-48 md:mt-24   ">
       {userData && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -99,7 +99,8 @@ const PostCard = ({ post }: PostCardProps) => {
             </ul>
           </div>
           <img
-            width={700}
+            width={600}
+            height={400}
             src={`http://localhost:3000/profile/${
               post?.image[0] || "public/assets/icons/profile-placeholder.svg"
             }`}

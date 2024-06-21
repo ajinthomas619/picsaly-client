@@ -6,8 +6,21 @@ import Navbar from "@/admin/components/Navbar";
 import UserManagement from "@/admin/components/UserManagement";
 import AdminHome from "@/admin/components/AdminHome";
 import PostManagement from "@/admin/components/PostManagement";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const Admin = () => {
+  const admin = useSelector((state:any) => {
+    console.log("state of the selector isa",state)
+   return state.persisted.admin.adminData
+})
+
+console.log("admin dataaas",admin)
+
+  useEffect(()=>{
+
+    console.log("admin dataaaaaaaa",admin)
+  },[admin])
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />

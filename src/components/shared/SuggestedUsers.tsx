@@ -21,6 +21,7 @@ const SuggestedUsers = () => {
         );
      
         setUsers(res.data.data);
+   
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
@@ -30,7 +31,7 @@ const SuggestedUsers = () => {
   }, [users]);
   return (
     <>
-      <div className="common-container mx-auto max-w-4xl p-4 mt-16 ml-20 fixed w-1/4 mb-36  " >
+      <div className="common-container mx-auto max-w-4xl p-4 mt-16 ml-20 fixed w-1/5 mb-36  " >
         <div className="user-container bg-slate-100 shadow-md rounded-lg p-4 overflow-scroll h-screen mb-36 ">
           <h2 className="text-xl font-semibold mb-4">Suggested Users</h2>
           <ul className="user-grid space-y-4 mb-16 ">

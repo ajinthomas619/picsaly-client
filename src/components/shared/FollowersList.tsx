@@ -11,7 +11,7 @@ const FollowersList = ({userId}) => {
         const fetchFollowers = async() => {
             try{
                 const response = await axios.get(`http://localhost:3000/api/getFollowers/${userId}`)
-                console.log("the response is",response.data.data)
+               
                 setFollowers(response.data.data)
             }
             catch(error){
