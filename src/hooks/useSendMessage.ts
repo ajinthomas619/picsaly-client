@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { UserData } from "@/utils/interfaces/interface";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const useSendMessage = () => {
     const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const useSendMessage = () => {
                 formData.append("file", file);
 
                 response = await axios.post(
-                    `http://localhost:3000/api/sendFile/${selectedConversation._id}`,
+                    `${BASE_URL}/sendFile/${selectedConversation._id}`,
                     formData,
                     { withCredentials: true }
                 );
@@ -36,11 +37,13 @@ const useSendMessage = () => {
                 };
 
                 response = await axios.post(
-                    `http://localhost:3000/api/send/${selectedConversation._id}`,
+                    `${BASE_URL}/send/${selectedConversation._id}`,
                     payload,
                     { withCredentials: true }
                 );
             }
+           
+
 
             const data = response.data.data;
             setMessages([...messages, data]);

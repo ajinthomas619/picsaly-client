@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const formSchema = z.object({
   image: z.string().optional(),
@@ -50,7 +51,7 @@ const navigate = useNavigate()
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getUserById/${id}`,
+          `${BASE_URL}/getUserById/${id}`,
           { withCredentials: true }
         );
         setUser(response.data.data);
@@ -76,7 +77,7 @@ const navigate = useNavigate()
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/addProfileImage/${user._id}`,
+        `${BASE_URL}/addProfileImage/${user._id}`,
         formData,
         { withCredentials: true }
       );

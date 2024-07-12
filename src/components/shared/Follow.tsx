@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { updateUser } from "@/redux/slices/userSlices";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
-const Follow = ( {id, currentUserId}:any) => {
+const Follow = ( {id, currentUserId,fetchSuggestedUsers}:any) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [followUser, setFollowUser] = useState(false);
   const userData = useSelector((state) => state.persisted.user.userData);
@@ -15,13 +16,16 @@ const Follow = ( {id, currentUserId}:any) => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getUserById/${id}`
+          `${BASE_URL}/getUserById/${id}`,
+          {
+            withCredentials:true
+          }
         );
       
 
         setCurrentUser(response.data.data);
         if (
-          response.data.data?.socialConnections?.Followers?.includes(currentUserId)
+          response.data.data?.socialConnections?.Following?.includes(currentUserId)
         ) {
           setFollowUser(true);
         }
@@ -35,10 +39,12 @@ const Follow = ( {id, currentUserId}:any) => {
   const follow = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/followUser",
+        `${BASE_URL}/followUser`,
         {
-          currentUserId: id,
+          currentUserId: id, 
           followedUserId: currentUserId
+        },{
+          withCredentials:true
         }
       );
   
@@ -47,6 +53,8 @@ const Follow = ( {id, currentUserId}:any) => {
         setFollowUser(true);
         dispatch(updateUser({ ...userData, profile: { ...userData.profile } }));
         sendNotification("followUserNotification");
+        console.log("fetching")
+        fetchSuggestedUsers(userData.finduser._id)
       } else if (response.data.message === 'Unfollowed successfully') {
         setFollowUser(false);
         dispatch(updateUser({ ...userData, profile: { ...userData.profile } }));
@@ -65,7 +73,7 @@ const Follow = ( {id, currentUserId}:any) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/api/notification", {
+      const response = await axios.post(`${BASE_URL}/notification`, {
         message,
         data,
       });

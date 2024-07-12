@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { UserData } from "@/utils/interfaces/interface";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
-
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 const UserManagement: React.FC = () => {
     const [data, setData] = useState<UserData[]>([]);
     const [reload, setReload] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const UserManagement: React.FC = () => {
     ];
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/getAllUsers`, { withCredentials: true })
+        axios.get(`${BASE_URL}/getAllUsers`, { withCredentials: true })
             .then((res) => {
                 setData(res.data.data);
                 console.log("the data of users",res.data);
@@ -64,7 +64,7 @@ const UserManagement: React.FC = () => {
                     label: "Change",
                     onClick: () => {
                                                                     
-                        axios.post(`http://localhost:3000/api/changeuserstatus`, { userId }, { withCredentials: true })
+                        axios.post(`${BASE_URL}/changeuserstatus`, { userId }, { withCredentials: true })
                             .then((res) => {
                                 console.log("the response of blockkk",res)
                                 setReload(true);

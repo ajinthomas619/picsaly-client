@@ -17,6 +17,7 @@ import VideoCall from '@/components/chat/videoCall';
 import useListenToVideoCalls from '@/hooks/useListentoVideoCalls';
 import { useState, useEffect } from 'react';
 import Notification from '@/_root/pages/Notification';
+import FullScreen from '@/components/shared/FullScreen';
 
 const UserRoutes = () => {
   useListenMessages();
@@ -46,6 +47,7 @@ const UserRoutes = () => {
         </Route>
 
         {/* private routes */}
+        
         <Route element={<RootLayout />}>
           <Route path="/" index element={<Home />} />
           <Route path="/explore" element={<Explore />} />
@@ -61,6 +63,7 @@ const UserRoutes = () => {
           <Route path="/notifications" element={<Notification />} />
           
         </Route>
+          <Route path="/full-screen/:imgURL" element={<FullScreen />} />
 
         {/* Protecting Admin routes */}
         <Route element={<ProtectedRoute />}>

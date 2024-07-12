@@ -5,6 +5,7 @@ import { UserData } from "@/utils/interfaces/interface";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 import PostStats from "./PostStats";
 
@@ -22,7 +23,9 @@ const PostCard = ({ post }: PostCardProps) => {
       try {
         const id = post?.createdBy?._id;
         const response = await axios.get(
-          `http://localhost:3000/api/getUserById/${id}`
+          `${BASE_URL}/getUserById/${id}`,{
+            withCredentials:true
+          }
         );
      
         setUserData(response.data.data);
@@ -39,7 +42,7 @@ const PostCard = ({ post }: PostCardProps) => {
     : "";
 
   return (
-    <div className="post-card flex flex-col px-6 py-20 md:ml-96 md:mr-48 md:mt-24   ">
+    <div className="post-card flex flex-col px-4 py-4 md:ml-96 md:mr-48 md:mt-8   ">
       {userData && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -98,9 +101,9 @@ const PostCard = ({ post }: PostCardProps) => {
               ))}
             </ul>
           </div>
-          <img
-            width={600}
-            height={400}
+          <LazyLoadImage
+            width={400}
+            height={300}
             src={`http://localhost:3000/profile/${
               post?.image[0] || "public/assets/icons/profile-placeholder.svg"
             }`}

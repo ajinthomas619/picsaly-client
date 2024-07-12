@@ -5,6 +5,7 @@ import { Input } from '../ui/input';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { BASE_URL } from '@/utils/api/baseUrl/axios.baseUrl';
 
 const Search: React.FC = () => {
     const [posts, setPosts] = useState([]);
@@ -24,8 +25,12 @@ const Search: React.FC = () => {
         }
 
         try {
-            const usersResponse = await axios.get(`http://localhost:3000/api/getSearchUser/${query}`);
-            const postsResponse = await axios.get(`http://localhost:3000/api/search-post/${query}`);
+            const usersResponse = await axios.get(`${BASE_URL}/getSearchUser/${query}`,{
+                withCredentials:true
+              });
+            const postsResponse = await axios.get(`${BASE_URL}/search-post/${query}`,{
+                withCredentials:true
+              });
 
             console.log("the post response", postsResponse)
             console.log("the user response", usersResponse)
@@ -58,7 +63,7 @@ const Search: React.FC = () => {
     console.log("the result users", users);
 
     return (
-        <div className="relative">
+        <div className="relative ">
             <Input
                 type="text"
                 value={q}

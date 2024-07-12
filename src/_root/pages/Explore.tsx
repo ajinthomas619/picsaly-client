@@ -5,6 +5,9 @@ import { debounce } from "@/lib/utils";
 import { PostData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { Link } from "react-router-dom";
+import { getAllPostFunction } from "@/utils/api/methods/PostService/get";
+import { useSelector } from "react-redux";
 
 
 const ExplorePage = () => {
@@ -12,9 +15,13 @@ const ExplorePage = () => {
   const [q, setQ] = useState<string>("");
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
 
+  const userData = useSelector(
+    (state: UserData) => state.persisted.user.userData
+  );
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/all-post`);
+      const id = userData.finduser._id
+      const response = await getAllPostFunction(id)
       setPosts(response.data.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -30,7 +37,9 @@ const ExplorePage = () => {
 
     try {
        
-        const postsResponse = await axios.get(`http://localhost:3000/api/search-post/${query}`);
+        const postsResponse = await axios.get(`http://localhost:3000/api/search-post/${query}`,{
+          withCredentials:true
+        });
           
 
         console.log("the post response",postsResponse)
@@ -82,6 +91,7 @@ const ExplorePage = () => {
       <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
         {posts.length > 0
           ? posts.map((post) => (
+            <Link to={`/post/${post._id}`}>
             <LazyLoadImage
             key={post._id}
             src={`http://localhost:3000/profile/${post.image[0]}`}
@@ -89,6 +99,7 @@ const ExplorePage = () => {
             className="w-64 h-64 object-cover rounded-lg"
             loading="lazy"
           />
+          </Link>
             ))
           : "No Post found"}{" "}
       </div>

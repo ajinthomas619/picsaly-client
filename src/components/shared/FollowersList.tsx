@@ -3,6 +3,7 @@ import axios from 'axios'
 import Follow from './Follow'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { Link } from 'react-router-dom'
+import { BASE_URL } from '@/utils/api/baseUrl/axios.baseUrl'
 
 const FollowersList = ({userId}) => {
     const [followers,setFollowers] = useState([])
@@ -10,7 +11,7 @@ const FollowersList = ({userId}) => {
     useEffect(() => {
         const fetchFollowers = async() => {
             try{
-                const response = await axios.get(`http://localhost:3000/api/getFollowers/${userId}`)
+                const response = await axios.get(`${BASE_URL}/getFollowers/${userId}`,{withCredentials:true})
                
                 setFollowers(response.data.data)
             }

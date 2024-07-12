@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllPostFunction } from "@/utils/api/methods/PostService/get";
+import { getAllPostFunction, getPostorHome } from "@/utils/api/methods/PostService/get";
 import { UserData } from "@/utils/interfaces/interface";
 import { useSelector } from "react-redux";
 
@@ -7,6 +7,7 @@ import PostCard from "@/components/shared/PostCard";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SuggestedUsers from "@/components/shared/SuggestedUsers";
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 
 const Home = () => {
@@ -33,7 +34,8 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await getAllPostFunction();
+        const id = userData.finduser._id;
+        const response = await getPostorHome(id);
 
         if (response && response.data && response.data.data) {
           setPosts(response.data.data.reverse());
@@ -51,7 +53,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className=" flex flex-1 ">
+    <div className=" flex flex-1 mt-8 ">
       <div className="home-container ">
         
         <div className="home-post">
@@ -59,11 +61,19 @@ const Home = () => {
           {isPostLoading && !posts ? (
             <Loader />
           ) : (
+            <InfiniteScroll
+            dataLength={posts.length}
+            next={posts}
+            hasMore={true}
+            loader={<Loader />}
+            endMessage={<p>No more data to load.</p> }
+            >
             <ul className="flex flex-col gap-9 w-full">
               {posts.map((post: any) => (
                 <PostCard key={post._id} post={post} />
               ))}
             </ul>
+            </InfiniteScroll>
           )}
         </div>
       </div >

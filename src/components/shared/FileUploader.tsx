@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 
@@ -11,6 +11,13 @@ type FileUploaderProps = {
 const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState("");
+
+  useEffect(() => {
+    if (mediaUrl) {
+      setFileUrl(mediaUrl);
+    }
+  }, [mediaUrl]);
+
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
       setFile(acceptedFiles);
@@ -35,7 +42,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
           rounded-xl cursor-pointer"
       >
         <input {...getInputProps()} className="cursor-pointer" />
-        {mediaUrl || fileUrl ? (
+        {fileUrl ? (
           <>
             <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
               <img src={fileUrl} alt="image" className="file_uploader-img" />
@@ -43,7 +50,6 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
             <p className="file_uploader-label">
               Click or drag photo to replace
             </p>
-           
           </>
         ) : (
           <div className="file_uploader-box">
@@ -57,7 +63,9 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
               Drag your photo here
             </h3>
             <p className="text-light-4 small-regular mb-6">SVG,PNG,JPG</p>
-            <Button type="button" className="shad-button_dark_4">Select From Computer</Button>
+            <Button type="button" className="shad-button_dark_4">
+              Select From Computer
+            </Button>
           </div>
         )}
       </div>
@@ -66,3 +74,4 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
 };
 
 export default FileUploader;
+ 

@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const Navbar = () => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            await axios.get("http://localhost:3000/api/logout", { withCredentials: true });
+            await axios.get(`${BASE_URL}/logout`, { withCredentials: true });
             navigate('/adminlogin');
         } catch (error) {
             console.log(error);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CanvasJSReact from "@canvasjs/react-charts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const PostsPerMonth = () => {
@@ -10,7 +10,7 @@ const PostsPerMonth = () => {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/getMonthlyPost`, { withCredentials: true })
+        axios.get(`${BASE_URL}/getMonthlyPost`, { withCredentials: true })
             .then((res) => {
                 console.log("the response of posts per month", res);
                 const data = res.data.postsPerMonth;

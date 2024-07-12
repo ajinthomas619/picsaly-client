@@ -4,6 +4,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import toast from "react-hot-toast";
 import { PostData } from "@/utils/interfaces/interface";
 import { confirmAlert } from "react-confirm-alert";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const PostManagement = () => {
     const [posts, setPosts] = useState<PostData[]>([]);
@@ -49,7 +50,7 @@ const PostManagement = () => {
     ];
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/showall`)
+        axios.get(`${BASE_URL}/showall`)
             .then((res) => {
                 console.log("the response", res);
                 setPosts(res.data.data);
@@ -70,7 +71,7 @@ const PostManagement = () => {
                 {
                     label: "Change",
                     onClick: () => {
-                        axios.post(`http://localhost:3000/api/updatepoststatus`, { postId }, { withCredentials: true })
+                        axios.post(`${BASE_URL}/updatepoststatus`, { postId }, { withCredentials: true })
                             .then((res) => {
                                 console.log("the resp[onse of update post status",res)
                                 setReload(true);

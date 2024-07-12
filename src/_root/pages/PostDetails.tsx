@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Loader } from 'lucide-react';
-import GridPostList from '@/components/shared/GridPostList';
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+import GridPostList from "@/components/shared/GridPostList";
+import { MdDelete } from "react-icons/md";
+import { confirmAlert } from "react-confirm-alert";
 import PostStats from "@/components/shared/PostStats";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { removePost, setPost } from "@/redux/slices/postSlice";
 import { UserData, PostData } from "@/utils/interfaces/interface";
 import axios from "axios";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import Modal from "@/Modal/Modal";
 import toast from "react-hot-toast";
 
@@ -33,7 +35,8 @@ const PostDetails = () => {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      axios.get(`http://localhost:3000/api/get-post/${id}`)
+      axios
+        .get(`http://localhost:3000/api/get-post/${id}`)
         .then((res: any) => {
           setPosts(res.data.post);
           setUser(res.data.user);
@@ -47,12 +50,47 @@ const PostDetails = () => {
   }, [id]);
 
   const handleDeletePost = () => {
-    dispatch(removePost(posts?._id));
+    confirmAlert({
+      title: "Confirm Delete Post",
+      message: "Are you sure you want to delete this post?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            try {
+              const response = await axios.delete(
+                `http://localhost:3000/api/delete-post/${id}`
+              );
+              console.log("the response is ", response);
+              if (response.status) {
+                navigate("/");
+                return { status: response.status, message: response.message };
+              } else {
+                return { status: response.status, message: response.message };
+              }
+            } catch (error) {
+              console.log("error in deleting post", error);
+            }
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
 
   const multiFormatDateString = (dateString: string) => {
     const date = new Date(dateString);
-    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
     return formattedDate;
   };
 
@@ -66,13 +104,16 @@ const PostDetails = () => {
 
   const handleReportSubmit = async () => {
     try {
-     const response =  await axios.post(`http://localhost:3000/api/report-post/${id}`, { reason: reportReason,userId:userData.finduser._id },);
-     if(response.status){
-      toast.success("post reported successfully")
-     }
-     else{
-    toast.error("there was a error in reporting post")
-     }
+      const response = await axios.post(
+        `http://localhost:3000/api/report-post/${id}`,
+        { reason: reportReason, userId: userData.finduser._id },
+        { withCredentials: true }
+      );
+      if (response.status) {
+        toast.success("post reported successfully");
+      } else {
+        toast.error("there was a error in reporting post");
+      }
       closeModal();
     } catch (error) {
       console.error("Error reporting post:", error);
@@ -89,7 +130,8 @@ const PostDetails = () => {
         <Button
           onClick={() => navigate(-1)}
           variant="ghost"
-          className="shad-button_ghost">
+          className="shad-button_ghost"
+        >
           <img
             src={"/assets/icons/back.svg"}
             alt="back"
@@ -103,7 +145,9 @@ const PostDetails = () => {
       <div className="post_details-card">
         <img
           width={700}
-          src={`http://localhost:3000/profile/${posts?.image[0] || 'public/assets/icons/profile-placeholder.svg'}`}
+          src={`http://localhost:3000/profile/${
+            posts?.image[0] || "public/assets/icons/profile-placeholder.svg"
+          }`}
           alt="creator"
           className="post_details-img rounded-lg"
         />
@@ -112,7 +156,8 @@ const PostDetails = () => {
           <div className="flex-between w-full">
             <Link
               to={`/profile/${posts?.createdBy._id}`}
-              className="flex items-center gap-3">
+              className="flex items-center gap-3"
+            >
               <LazyLoadImage
                 src={
                   `http://localhost:3000/profile/${posts?.createdBy?.profile?.profileUrl}` ||
@@ -140,7 +185,10 @@ const PostDetails = () => {
             <div className="flex-center gap-4">
               <Link
                 to={`/update-post/${posts?._id}`}
-                className={`${userData?._id !== posts?.createdBy._id && "hidden"}`}>
+                className={`${
+                  userData?._id !== posts?.createdBy._id && "hidden"
+                }`}
+              >
                 <img
                   src={"/assets/icons/edit.svg"}
                   alt="edit"
@@ -152,7 +200,10 @@ const PostDetails = () => {
               <Button
                 onClick={handleDeletePost}
                 variant="ghost"
-                className={`post_details-delete_btn ${userData?._id !== posts?.createdBy._id && "hidden"}`}>
+                className={`post_details-delete_btn ${
+                  userData?._id !== posts?.createdBy._id && "hidden"
+                }`}
+              >
                 <img
                   src={"/assets/icons/delete.svg"}
                   alt="delete"
@@ -178,14 +229,27 @@ const PostDetails = () => {
       <div className="w-full max-w-5xl">
         <hr className="border w-full border-dark-4/80" />
 
- {posts?.createdBy._id === userData.finduser._id?(
-  <></>
- ):(
-
-      <Button onClick={openModal} variant="ghost">
-        Report Post
-      </Button>
- )}
+        {posts?.createdBy._id === userData.finduser._id ? (
+          <div className="flex flex-row justify-between gap-4 mt-8">
+            <MdDelete
+              className="rounded-lg w-6 h-6 bg-indigo-100 mt-2 "
+              onClick={handleDeletePost}
+            />
+            <Link to={`/update-post/${id}`}>
+              <img
+                src="/public/assets/icons/edit.svg"
+                alt="edit"
+                width={20}
+                height={20}
+                className="mt-2"
+              />
+            </Link>
+          </div>
+        ) : (
+          <Button onClick={openModal} variant="ghost">
+            Report Post
+          </Button>
+        )}
         <h3 className="body-bold md:h3-bold w-full my-10">
           More Related Posts
         </h3>

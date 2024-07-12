@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import { addAdmin,clearAdmin } from "@/redux/slices/adminSlice";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 
@@ -24,7 +25,7 @@ const AdminloginForm = () => {
             console.log("the admin data",admin)
          
           const response = await axios.post(
-            "http://localhost:3000/api/adminlogin",
+            `${BASE_URL}/adminlogin`,
           userData,
             { withCredentials: true }
           );
@@ -49,30 +50,32 @@ const AdminloginForm = () => {
     </div>
 
     <h2 className="mb-10 text-center mt-5 font-bold text-3xl">Admin Login</h2>
-    <div>
-      <form className="flex flex-col items-center">
-        <label className="mb-5">
-          Email
+    <div className="p-3 flex flex-col items-center">
+      
+        <div className="flex flex-col items-center">
+        <label className="mb-5 ">
+         <p> Email </p> 
           <input
-            className="border ml-5"
+            className="input input-ghost input-bordered"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
 
-        <label className="mb-5">
-          Password
+        <label className="mb-5 ">
+          <p> Password </p>
           <input
-            className="border ml-1"
+            className="input input-ghost input-bordered"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-      </form>
+        </div>
+      
 
-      <Button type="submit">Login</Button>
+      <Button type="submit" className="justify-center">Login</Button>
     </div>
   </form>
   )

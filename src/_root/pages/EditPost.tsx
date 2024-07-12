@@ -23,7 +23,7 @@ const EditPost = () => {
     const fetchPost = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/api/get-post/${id}`);
+        const response = await axios.get(`http://localhost:3000/api/get-post/${id}`,{withCredentials:true});
         setPost(response.data.post);
       } catch (error) {
         console.error("Error fetching post:", error);

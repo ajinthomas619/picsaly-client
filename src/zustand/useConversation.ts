@@ -13,6 +13,7 @@ interface ConversationActions {
     setMessages: (messages: Message[]) => void;
     setReload: (reload: boolean) => void;
     setUnreadMessages: (unreadMessages: Message[] | null) => void;
+    removeMessage:(messageId:string) => void
 }
 
 const useConversation = create<ConversationState & ConversationActions>((set) => ({
@@ -25,6 +26,9 @@ const useConversation = create<ConversationState & ConversationActions>((set) =>
     setMessages: (messages) => set((state) => ({ ...state, messages })),
     setReload: (reload) => set((state) => ({ ...state, reload })),
     setUnreadMessages: (unreadMessages) => set((state) => ({ ...state, unreadMessages })),
+    removeMessage: (messageId) => set((state) => ({
+        messages: state.messages.filter((message) => message._id !== messageId),
+    })),
 }));
 
 export default useConversation;

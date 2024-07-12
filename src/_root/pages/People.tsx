@@ -24,7 +24,7 @@ const People = () => {
         console.log("user data", userData);
        
         console.log("the user id", id);
-        const res = await axios.get(`http://localhost:3000/api/getAllUsers`);
+        const res = await axios.get(`http://localhost:3000/api/getAllUsers/${id}`,{withCredentials:true});
         console.log("the actual response", res);
         console.log("all users", res.data.data);
         setUsers(res.data.data);

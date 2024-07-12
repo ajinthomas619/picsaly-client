@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setPost } from "@/redux/slices/postSlice";
 import { PostData, CommentData, UserData } from "@/utils/interfaces/interface";
 import { Trash, X } from "lucide-react";
-
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
+import { clearUser, editUser, updateUser } from "@/redux/slices/userSlices";
 type PostStatsProps = {
   post: PostData;
 };
@@ -40,13 +41,19 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
+        console.log("the post id",post._id)
         const response = await axios.get(
-          `http://localhost:3000/api/get-post/${post._id}`
+          `${BASE_URL}/get-post/${post._id}`,{
+            withCredentials:true
+          }
         );
+        console.log("the response of fetchedPost data",response)
         const fetchedPostData = response.data.post;
+        console.log("the fetched post data",fetchedPostData)
         setPostData(fetchedPostData);
         setLikeCount(fetchedPostData.Likes.length);
         setComments(fetchedPostData.comments);
+        
         const initialCommentLikes = fetchedPostData.comments.reduce(
           (acc: { [key: string]: boolean }, comment: CommentData) => {
             acc[comment._id] = comment?.likes.includes(userData.finduser._id);
@@ -65,13 +72,15 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
        
       setCommentLikes(initialCommentLikes);
       const saved = userData.finduser.activity.saved
+      console.log("the saved posts",saved)
+      console.log("the type", typeof(saved))
+    
   
   
-      for(let keys in saved){
-        if(saved[keys] === post._id){
-          setSaved(true)
+      if (saved.includes(post._id)) {
+        setSaved(true);
       }
-      }
+      
 
       
     }catch (error) {
@@ -82,18 +91,20 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
 
     fetchPostData();
-  }, [post._id,userData.finduser._id]);
+  }, [post?._id,userData.finduser._id,userData]);
 
 
 
   const handleLike = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/like-post/${post._id}`,
+        `${BASE_URL}/like-post/${post._id}`,
         {
           postId: post._id,
           userId: userData.finduser._id,
           liked: !liked,
+        },{
+          withCredentials:true
         }
       );
       
@@ -124,7 +135,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         postId:post._id,
         postImage:`http://localhost:3000/profile/${post?.image[0]}` 
       }
-      const response = await axios.post("http://localhost:3000/api/notification", { message,data });
+      const response = await axios.post(`${BASE_URL}/notification`, { message,data });
       if (response.status === 200) {
         console.log("Notification sent successfully");
       } else {
@@ -144,13 +155,15 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/comment-post/${post._id}`,
+        `${BASE_URL}/comment-post/${post._id}`,
         {
           postId: post._id,
           userId: userData.finduser._id,
           name: userData.finduser.basicInformation.username,
           comment: commentInput,
           profile: userData.finduser.profile.profileUrl,
+        },{
+          withCredentials:true
         }
       );
      
@@ -173,7 +186,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
   const handleDeleteComment = async (commentId: string) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/delete-comment/${commentId}`,
+        `${BASE_URL}/delete-comment/${commentId}`,
         {
           headers: {
             postId: post._id,
@@ -203,7 +216,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/reply-to-comment/${commentId}`,
+        `${BASE_URL}/reply-to-comment/${commentId}`,
         {
           postId: post._id,
           userId: userData.finduser._id,
@@ -211,14 +224,16 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           reply: replyValue,
         }
       );
-
+    console.log("the response of reply comment",response.data.data)
       if (response.data.status) {
+        const updatedPost = response.data.data
+        const updatedComments = updatedPost.comments
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === commentId
               ? {
                   ...comment,
-                  replies: [...comment.replies, response.data.reply],
+                  replies:  updatedComments.find((c:any) => c._id === commentId)?.replies || comment?.replies,
                 }
               : comment
           )
@@ -248,7 +263,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/edit-comment/${post._id}`,
+        `${BASE_URL}/edit-comment/${post._id}`,
         {
           comment: editingCommentText,
           commentid: editingCommentId,
@@ -279,7 +294,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
     try {
       const liked = commentLikes[commentId] || false;
       const response = await axios.post(
-        `http://localhost:3000/api/like-comment/${commentId}`,
+        `${BASE_URL}/like-comment/${commentId}`,
         {
           liked: !liked,
           userId: userData.finduser._id,
@@ -312,7 +327,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
     try {
       const liked = replyLikes[replyId] || false;
       const response = await axios.post(
-        `http://localhost:3000/api/like-reply/${replyId}`,
+        `${BASE_URL}/like-reply/${replyId}`,
         {
           liked: !liked,
           userId: userData.finduser._id,
@@ -334,16 +349,53 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
     }
   };
 
+ 
   const handleSavePost = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/savepost`, {
-        postId: post._id,
-        userId: userData.finduser._id,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/savepost`,
+        {
+          postId: post._id,
+          userId: userData.finduser._id,
+          saved:!saved
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (response.status) {
-        setSaved(true);
-        toast.success("Post saved successfully.");
+      console.log("Save post response:", response);
+
+      if (response.status === 200) {
+        const updatedSaved = [...userData.finduser.activity.saved];
+
+        if (!saved) {
+          updatedSaved.push(post._id);
+        } else {
+          const index = updatedSaved.indexOf(post._id);
+          if (index > -1) {
+            updatedSaved.splice(index, 1);
+          }
+        }
+        
+        const updatedUserData = {
+          ...userData,
+          finduser: {
+            ...userData.finduser,
+            activity: {
+              ...userData.finduser.activity,
+              saved: updatedSaved,
+            },
+          },
+        };
+        
+        setSaved((prevSaved) => !prevSaved);
+        console.log("the updated user data",updateUser)
+        dispatch(editUser(updatedUserData));
+        
+        toast.success(!saved ? "Post saved successfully." : "Post removed from saved successfully.");
+        
+        console.log("Updated user data after saving post:", updatedUserData);
       } else {
         toast.error("Failed to save post. Please try again.");
       }
@@ -352,10 +404,14 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
       toast.error("Error saving post. Please try again.");
     }
   };
+  
   const fetchUser = async (id: any) => {
     try {
+      console.log("the id is",id)
       const response = await axios.get(
-        `http://localhost:3000/api/getUserById/${id}`
+        `${BASE_URL}/getUserById/${id}`,{
+          withCredentials:true
+        }
       );
       setUser(response.data.data);
     } catch (error) {
@@ -409,7 +465,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
       </div>
       {showModal && (
         <Modal onClose={closeModal}>
-          <div className="p-2 max-w-3xl mx-auto">
+          <div className="p-2 max-w-3xl mx-auto ">
             <h2 className="text-lg font-bold mb-2">Comments</h2>
             <button onClick={closeModal}>
               <X />
@@ -420,8 +476,8 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                   <div className="text-sm mb-2 flex items-center">
                     <img
                       src={
-                        comment.user?.profile?.profileUrl
-                          ? `http://localhost:3000/profile/${comment.user?.profile?.profileUrl}`
+                        comment.userId?.profile?.profileUrl
+                          ? `http://localhost:3000/profile/${comment.userId?.profile?.profileUrl}`
                           : "https://avatar.iran.liara.run/public/boy"
                       }
                       alt={`${comment.username}'s profile`}
@@ -432,7 +488,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                     <p className="text-semibold text-xl text-indigo-400 border rounded-md">
                       "{comment.text}"
                     </p>
-                    {comment.userId === userData.finduser._id && (
+                    {comment.userId._id === userData.finduser._id && (
                       <>
                         <button
                           className="text-blue-500 ml-auto"
@@ -499,27 +555,31 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                         <div className="ml-5 ">
                           {comment.replies.map((reply) => (
                             <div
-                              key={reply._id}
+                              key={reply?._id}
                               className="text-sm mb-2 flex items-center border "
                             >
                               <img
-                                src={"https://avatar.iran.liara.run/public/boy"}
-                                alt={`${reply.username}'s profile`}
+                                 src={
+                                  reply?.userId?.profile?.profileUrl
+                                    ? `http://localhost:3000/profile/${reply.userId?.profile?.profileUrl}`
+                                    : "https://avatar.iran.liara.run/public/boy"
+                                }
+                                alt={`${reply?.username}'s profile`}
                                 className="w-8 h-8 mr-2 rounded-full"
                               />
                               <p className="font-bold gap-2 px-2">
-                                {reply.username}
+                                {reply?.username}
                               </p>
                               <p className="text-semibold text-lg text-indigo-400">
-                                "{reply.reply}"
+                                "{reply?.reply}"
                               </p>
                               <button
                                 className="text-blue-500 ml-auto"
-                                onClick={() => handleLikeReply(reply._id)}
+                                onClick={() => handleLikeReply(reply?._id)}
                               >
                                 <img
                                   src={
-                                    !replyLikes[reply._id]
+                                    !replyLikes[reply?._id]
                                       ? "/assets/icons/like.svg"
                                       : "/assets/icons/liked.svg"
                                   }
@@ -551,6 +611,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                       comments.find((c) => c._id === replyingTo)?.username
                     }`}
                     className="w-full rounded-md p-3 border border-gray-300 focus:outline-none focus:border-blue-500"
+                    maxLength={200}
                     required
                   />
                   <div className="flex justify-end mt-2">
@@ -572,6 +633,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                     onChange={(e) => setEditingCommentText(e.target.value)}
                     placeholder="Edit your comment"
                     className="w-full rounded-md p-3 border border-gray-300 focus:outline-none focus:border-blue-500"
+                    maxLength={200}
                     required
                   />
                   <div className="flex justify-end mt-2">
@@ -585,23 +647,26 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                 </form>
               </div>
             )}
-            <form onSubmit={handleAddComment} className="space-y-4">
+            {!replyingTo &&(
+            <form onSubmit={handleAddComment} className="space-y-2 ">
               <textarea
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder="Add a comment..."
                 className="w-full rounded-md p-3 border border-gray-300 focus:outline-none focus:border-blue-500"
+                maxLength={200}
                 required
               />
-              <div className="flex justify-end mt-2">
+              <div className="flex justify-end ">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-8"
                 >
                   Submit
                 </button>
               </div>
             </form>
+        )}
           </div>
         </Modal>
       )}

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { debounce } from "@/lib/utils";
 
@@ -22,7 +22,9 @@ const LikedPost = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/getLikedPosts/${routeId}`); // Use routeId for consistency
+      const response = await axios.get(`http://localhost:3000/api/getLikedPosts/${routeId}`,{
+        withCredentials:true
+      }); // Use routeId for consistency
       console.log("likedpost data", response.data);
       setPosts(response.data.data);
     } catch (error) {
@@ -55,13 +57,15 @@ const LikedPost = () => {
      
       <div className='grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 py-4'>
         {posts.length > 0? posts.map((post) => (
+          <Link to={`/post/${post._id}`}>
       <LazyLoadImage
       key={post._id}
       src={`http://localhost:3000/profile/${post.image[0]}`}
       alt="Profile"
       className="w-64 h-64 object-cover rounded-lg"
       loading="lazy"
-    />          
+    />    
+    </Link>      
         )) : 'No Post found'}
       </div>
     </div>

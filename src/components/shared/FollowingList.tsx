@@ -3,14 +3,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Follow from "./Follow";
-
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 const FollowingList = ({userId}) => {
     const [following,setFollowing] = useState([])
 
     useEffect(() => {
         const fetchFollowing = async() => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/getFollowing/${userId}`)
+                const response = await axios.get(`${BASE_URL}/getFollowing/${userId}`,{withCredentials:true})
           
                 setFollowing(response.data.data)
             } catch (error) {

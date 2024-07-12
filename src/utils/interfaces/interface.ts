@@ -34,6 +34,7 @@ export interface CommentData {
     name:String;
     postId: string;
     createdAt: Date;
+    userId:string
 }
 export interface Message {
     shouldShake:boolean;
@@ -41,6 +42,7 @@ export interface Message {
     senderId:string;
     reciverId:string;
     message:string;
+    imgURL:string;
     createdAt:Date;
     updatedAt:Date;
 }

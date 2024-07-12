@@ -1,12 +1,12 @@
-import React from "react";
+
 import { useSelector } from "react-redux";
 import { Route, Link } from "react-router-dom";
 
 const ProtectedRoute = ({ path, element }: any) => {
-    const token = useSelector((state: any) => state.persisted.token.token);
+    const userData = useSelector((state: any) => state.persisted.user.userData);
     
   
-    if (token) {
+    if (userData) {
         return <Route path={path} element={element} />;
     }
 

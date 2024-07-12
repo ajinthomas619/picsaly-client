@@ -3,10 +3,10 @@ import {
   Route,
   Routes,
   Link,
-  Outlet,
   useParams,
   useLocation,
   useNavigate,
+  Navigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -14,19 +14,18 @@ import { LikedPost } from ".";
 import { Loader } from "lucide-react";
 import GridPostList from "@/components/shared/GridPostList";
 import CreatedPost from "./CreatedPosts";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import FollowersList from "@/components/shared/FollowersList";
 import FollowingList from "@/components/shared/FollowingList";
 import Follow from "@/components/shared/Follow";
 import { RootState } from "@/store";
+import BlockUser from "@/components/shared/blockUser";
 
 interface StatBlockProps {
   value: number;
   label: string;
   onClick?: () => void;
 }
-
-
 
 const StatBlock: React.FC<StatBlockProps> = ({ value, label, onClick }) => (
   <div className="flex flex-center gap-2 cursor-pointer" onClick={onClick}>
@@ -36,7 +35,7 @@ const StatBlock: React.FC<StatBlockProps> = ({ value, label, onClick }) => (
 );
 
 const Profile: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [posts, setPosts] = useState([]);
   const { id } = useParams<{ id: string }>();
   const { pathname } = useLocation();
@@ -55,10 +54,12 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getUserById/${id}`
+          `http://localhost:3000/api/getUserById/${id}`,
+          {
+            withCredentials: true,
+          }
         );
         setCurrentUser(response.data.data);
-   
       } catch (error) {
         console.error("Error while fetching user data", error);
       }
@@ -66,7 +67,10 @@ const Profile: React.FC = () => {
 
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/getCreatedPost/${userId}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/getCreatedPost/${userId}`,
+          { withCredentials: true }
+        );
         setPosts(response?.data.data);
       } catch (error) {
         console.error("Error in getting created posts", error);
@@ -76,7 +80,7 @@ const Profile: React.FC = () => {
     fetchUserData();
     fetchPosts();
   }, [id, userId]);
-console.log("the current user",currentUser)
+
   if (!currentUser) {
     return (
       <div className="flex flex-center w-full h-full">
@@ -114,7 +118,7 @@ console.log("the current user",currentUser)
               />
               <StatBlock
                 value={currentUser?.socialConnections?.Following.length || 0}
-                label="following"
+                label="Following"
                 onClick={() => navigate(`/profile/${id}/following`)}
               />
             </div>
@@ -140,7 +144,10 @@ console.log("the current user",currentUser)
                   </p>
                 </Link>
               ) : (
-                <Follow id={userId} currentUserId={currentUser?._id} />
+                <>
+                  <Follow id={userId} currentUserId={currentUser?._id} />
+                  <BlockUser id={userId} currentUserId={currentUser?._id} />
+                </>
               )}
             </div>
           </div>
@@ -177,20 +184,12 @@ console.log("the current user",currentUser)
       </div>
 
       <Routes>
-        <Route
-          index
-          element={<GridPostList posts={currentUser.posts} showUser={false} />}
-        />
-        {currentUser?._id && (
-          <>
-            <Route path="/liked-posts" element={<LikedPost />} />
-            <Route path="/created-posts" element={<CreatedPost />} />
-            <Route path="/followers" element={<FollowersList userId={userId} />} />
-            <Route path="/following" element={<FollowingList userId={userId} />} />
-          </>
-        )}
+        <Route path="/" element={<Navigate to={`/profile/${id}/created-posts`} replace />} />
+        <Route path="/created-posts" element={<CreatedPost />} />
+        <Route path="/liked-posts" element={<LikedPost />} />
+        <Route path="/followers" element={<FollowersList userId={userId} />} />
+        <Route path="/following" element={<FollowingList userId={userId} />} />
       </Routes>
-      <Outlet />
     </div>
   );
 };

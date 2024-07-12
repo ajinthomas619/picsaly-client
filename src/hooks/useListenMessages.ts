@@ -5,6 +5,7 @@ import {  useSelector } from "react-redux";
 import {Message,UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const useListenMessages = () => {
 
@@ -25,6 +26,7 @@ const useListenMessages = () => {
     useEffect(() => {
         const handleNewMessage = (newMessage:Message) => {
             console.log("the message recieved",newMessage )
+            console.log("the selected conversation",selectedConversation)
             newMessage.shouldShake = true
             if(selectedConversation?._id !== newMessage.senderId){
                 toast("New message Recived",{
@@ -34,7 +36,9 @@ const useListenMessages = () => {
             }
             (async () => {
                 try{
-                    const response = await axios.post(`http://localhost:3000/api/get-messages/${selectedConversation._id}`,{
+                    console.log("selectedCOnversation._if",selectedConversation._id)
+                    console.log("the userdsdaAAAA",userData.finduser._id)
+                    const response = await axios.post(`${BASE_URL}/get-messages/${selectedConversation._id}`,{
                         senderId:userData.finduser._id
                     },{
                         withCredentials:true

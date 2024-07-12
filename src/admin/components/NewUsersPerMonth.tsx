@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CanvasJSReact from "@canvasjs/react-charts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -10,7 +11,7 @@ const UsersPerMonth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/getMonthlyUsers `, {
+        axios.get(`${BASE_URL}/getMonthlyUsers `, {
             withCredentials: true
         })
             .then((res) => {

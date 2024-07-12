@@ -1,13 +1,14 @@
 import Conversations from "./Conversations";
 
-
 const Sidebar = () => {
     return (
-      <div className='border-r border-slate-500 flex flex-col'>
-        <div className="divider px-3"></div>
-        <Conversations/>
-      </div>
-    )
-  }
-  
-  export default Sidebar  
+        <div className=" flex flex-col h-full w-full sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 ">
+           <>
+            <Conversations />
+            </>
+           
+        </div>
+    );
+}
+
+export default Sidebar;

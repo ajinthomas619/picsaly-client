@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { addUser } from "@/redux/slices/userSlices";
+import { addUser, updateUser } from "@/redux/slices/userSlices";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const EditProfile = () => {
   const [user, setUser] = useState({});
@@ -16,12 +17,15 @@ const EditProfile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
+    const userData = useSelector((state: any) => state.persisted.user.userData);
   
     
     useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/getUserById/${id}`);
+        const response = await axios.get(`${BASE_URL}/getUserById/${id}`,{
+          withCredentials:true
+        });
         setUser(response.data);
       } catch (error) {
         console.error("Error in finding user", error);
@@ -64,11 +68,11 @@ const EditProfile = () => {
         throw new Error("User ID is not available");
       }
 
-      await axios.post(`http://localhost:3000/api/editProfile/${userId}`, formData, {
+      await axios.post(`${BASE_URL}/editProfile/${userId}`, formData, {
         withCredentials: true,
       });
   console.log("afferreer axios",formData)
-      dispatch(addUser(formData));
+      dispatch(updateUser({...userData, profile : {...userData.profile,...formData}}));
       navigate("/");
       setShowModal(false);
     } catch (error) {

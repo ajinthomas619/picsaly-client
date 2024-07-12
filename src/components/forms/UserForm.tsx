@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import FileUploader from "../shared/FileUploader"
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 const formSchema = z.object({
@@ -72,7 +73,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
 
   
     const response = await axios.post(
-      `http://localhost:3000/api/editProfile/{$id}`,
+      `${BASE_URL}/editProfile/{$id}`,
       formData,
       {
         withCredentials: true,

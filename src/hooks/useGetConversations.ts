@@ -4,6 +4,7 @@ import axios from "axios";
 import {  useSelector } from "react-redux";
 import { Conversation,UserData } from "@/utils/interfaces/interface";
 import useConversation from "@/zustand/useConversation";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 interface GetConversationsResponse {
@@ -26,7 +27,7 @@ const useGetConversations = () => {
                 const following = userData.finduser.socialConnections.Following
                 
 
-                const response = await axios.post(`http://localhost:3000/api/get-conversations/${userData.finduser._id}`,
+                const response = await axios.post(`${BASE_URL}/get-conversations/${userData.finduser._id}`,
                 {following},
             {withCredentials:true}
         )

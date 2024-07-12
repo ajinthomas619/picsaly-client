@@ -7,6 +7,7 @@ import { sidebarLinks } from "@/constants"
 import { UserData } from "@/utils/interfaces/interface"
 import {  useSelector,useDispatch } from "react-redux"
 import { clearUser } from '@/redux/slices/userSlices'
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl"
 
 
 
@@ -15,11 +16,12 @@ const LeftSideBar = () => {
   const { pathname } = useLocation()
 
   const userData = useSelector( (state : UserData )=> state.persisted.user.userData);
+  console.log("user data",userData)
 
   const navigate = useNavigate()
   const logout =async()=>{
       try{
-        axios.get("http://localhost:3000/api/logout")
+        axios.get(`${BASE_URL}/logout`)
         navigate('/log-in')
         dispatch(clearUser(userData))
       }
