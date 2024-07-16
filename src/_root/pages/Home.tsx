@@ -31,26 +31,33 @@ const Home = () => {
 
   const [isPostLoading, setIsPostLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  useEffect(() => {
+  const [page,setPage] = useState(1)
+  const [hasMore,setHasMore] = useState(true)
+  
     const fetchPosts = async () => {
       try {
         const id = userData.finduser._id;
-        const response = await getPostorHome(id);
+        const response = await getPostorHome(id,page);
 
         if (response && response.data && response.data.data) {
           setPosts(response.data.data.reverse());
+          if(response.data.data.length === 0){
+            setHasMore(false)
+          }
         }
       } catch (error) {
         console.error("Error while Fetching posts", error);
+      }
+      finally{
         setIsPostLoading(false);
+
       }
     };
-    fetchPosts();
 
-    const intervalId = setInterval(fetchPosts, 10000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+    useEffect(() => {
+      fetchPosts()
+    },[page])
+    
 
   return (
     <div className=" flex flex-1 mt-8 ">
@@ -63,8 +70,8 @@ const Home = () => {
           ) : (
             <InfiniteScroll
             dataLength={posts.length}
-            next={posts}
-            hasMore={true}
+            next={() => setPage(prevPage => prevPage+1)}
+            hasMore={hasMore}
             loader={<Loader />}
             endMessage={<p>No more data to load.</p> }
             >

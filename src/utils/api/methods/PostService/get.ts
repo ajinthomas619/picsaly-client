@@ -19,9 +19,11 @@ catch(error){
 }
 }
 
-export const getPostorHome = async(id:String) => {
+export const getPostorHome = async(id:String,page:any) => {
     try{
-        return axios.create({withCredentials:true}).get(`${getPostForHome_Api}/${id}`)
+        return axios.create({withCredentials:true}).get(`${getPostForHome_Api}/${id}`,{
+            params:{page,limit:10},
+        })
     }
     catch(error){
         console.log("reeoin getting post for home",error)

@@ -31,8 +31,11 @@ const useGetConversations = () => {
                 {following},
             {withCredentials:true}
         )
+
+        console.log("the response",response)
    
         const data = response.data
+        console.log("the data of get conversation",data)
       
         
         setConversations(data)

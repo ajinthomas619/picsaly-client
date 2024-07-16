@@ -33,8 +33,8 @@ const VideoCall: React.FC = () => {
     const call = async (element: HTMLDivElement | null) => {
         if (!element || !userData) return;
 
-        const appId = 229455199;
-        const serverSecret = "debaa23c9731c496642057b6479c6d21";
+        const appId = 705283306;
+        const serverSecret = "81ffe8feeb8efdadcd05925b1d298a49";
         const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
             appId,
             serverSecret,

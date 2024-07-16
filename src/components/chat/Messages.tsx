@@ -7,7 +7,7 @@ const Messages: React.FC = () => {
     const lastMessageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (messages.length) {
+        if (messages.length>0) {
             setTimeout(() => {
                 lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
             }, 100);
@@ -23,7 +23,7 @@ const Messages: React.FC = () => {
     }
 
     return (
-        <div className="px-4 flex-1 overflow-auto">
+        <div  className="px-4 flex-1 overflow-auto">
             {messages.map((message, ind) => {
                 const isLastMessage = ind === messages.length - 1;
                 return (

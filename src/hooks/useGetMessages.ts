@@ -7,7 +7,7 @@ import { UserData } from "@/utils/interfaces/interface";
 import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const useGetMessages = () => {
-    const [loading,setLoading] = useState(true)
+    const [loading,setLoading] = useState(false)
     const {messages,setMessages,selectedConversation} = useConversation()
     const userData = useSelector(
         (state:UserData) => state.persisted.user.userData
@@ -15,17 +15,22 @@ const useGetMessages = () => {
 
     useEffect(() => {
         const getMessages = async () => {
+            if(!selectedConversation?._id){
+                setMessages([])
+                return
+            }
             setLoading(true)
             try{
                 const response = await axios.post(`${BASE_URL}/get-messages/${userData.finduser._id}`,{senderId:selectedConversation?._id},{
                     withCredentials:true
                 })
       
-                setMessages(response.data.conversation.messages || response.data.conversation.messages.savedMessage )
+                setMessages(response.data.conversation.messages || response.data.conversation.messages.savedMessage || [])
                 console.log("the messages is",messages)
             }
             catch(error:any){
                 console.log("error in getMessages",error)
+                setMessages([])
                 
             }
             finally{
@@ -33,7 +38,7 @@ const useGetMessages = () => {
             }
         }
         
-        if(selectedConversation?._id) getMessages()
+    getMessages()
         },[selectedConversation?._id,setMessages,userData.finduser?._id])
     
     return {messages,loading}
