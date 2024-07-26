@@ -133,7 +133,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
         receiver_id:post.createdBy?._id,
         notificationType:notificationType,
         postId:post._id,
-        postImage:`http://localhost:3000/profile/${post?.image[0]}` 
+        postImage:`${import.meta.env.VITE_APP_BASE_URL}/profile/${post?.image[0]}` 
       }
       const response = await axios.post(`${BASE_URL}/notification`, { message,data });
       if (response.status === 200) {
@@ -477,7 +477,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                     <img
                       src={
                         comment.userId?.profile?.profileUrl
-                          ? `http://localhost:3000/profile/${comment.userId?.profile?.profileUrl}`
+                          ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${comment.userId?.profile?.profileUrl}`
                           : "https://avatar.iran.liara.run/public/boy"
                       }
                       alt={`${comment.username}'s profile`}
@@ -561,7 +561,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                               <img
                                  src={
                                   reply?.userId?.profile?.profileUrl
-                                    ? `http://localhost:3000/profile/${reply.userId?.profile?.profileUrl}`
+                                    ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${reply.userId?.profile?.profileUrl}`
                                     : "https://avatar.iran.liara.run/public/boy"
                                 }
                                 alt={`${reply?.username}'s profile`}

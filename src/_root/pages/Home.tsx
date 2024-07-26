@@ -29,7 +29,7 @@ const Home = () => {
     }
   }, []);
 
-  const [isPostLoading, setIsPostLoading] = useState(true);
+  const [isPostLoading, setIsPostLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page,setPage] = useState(1)
   const [hasMore,setHasMore] = useState(true)
@@ -72,7 +72,7 @@ const Home = () => {
             dataLength={posts.length}
             next={() => setPage(prevPage => prevPage+1)}
             hasMore={hasMore}
-            loader={<Loader />}
+            loader={" "}
             endMessage={<p>No more data to load.</p> }
             >
             <ul className="flex flex-col gap-9 w-full">

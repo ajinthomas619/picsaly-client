@@ -36,7 +36,7 @@ const Conversation: React.FC<Props> = ({ conversation, lastIndex }) => {
       >
         <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
-            <img src={`http://localhost:3000/profile/${conversation?.profileUrl}`} alt="profilePicture" />
+            <img src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${conversation?.profileUrl}`} alt="profilePicture" />
           </div>
         </div>
 

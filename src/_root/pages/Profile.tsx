@@ -20,6 +20,7 @@ import FollowingList from "@/components/shared/FollowingList";
 import Follow from "@/components/shared/Follow";
 import { RootState } from "@/store";
 import BlockUser from "@/components/shared/blockUser";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 interface StatBlockProps {
   value: number;
@@ -54,7 +55,7 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getUserById/${id}`,
+          `${BASE_URL}/getUserById/${id}`,
           {
             withCredentials: true,
           }
@@ -68,7 +69,7 @@ const Profile: React.FC = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/getCreatedPost/${userId}`,
+          `${BASE_URL}/getCreatedPost/${userId}`,
           { withCredentials: true }
         );
         setPosts(response?.data.data);
@@ -96,7 +97,7 @@ const Profile: React.FC = () => {
           <LazyLoadImage
             src={
               currentUser
-                ? `http://localhost:3000/profile/${
+                ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${
                     currentUser?.profile?.profileUrl ||
                     "https://avatar.iran.liara.run/public/boy"
                   }`

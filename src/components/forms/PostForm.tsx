@@ -20,6 +20,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PostData } from "@/utils/interfaces/interface";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 type PostFormProps = {
   post?: PostData;
   action: "Create" | "update";
@@ -72,7 +73,7 @@ console.log("action is ",action);
     } else if (action === "update" && post) {
       console.log("hi");
       
-      await  axios.put(`http://localhost:3000/api/edit-post/${post._id}`, formData,{
+      await  axios.put(`${BASE_URL}/edit-post/${post._id}`, formData,{
         withCredentials:true
       });
       console.log("form data after submission",formData);

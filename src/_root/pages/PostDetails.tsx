@@ -13,6 +13,7 @@ import axios from "axios";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Modal from "@/Modal/Modal";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const PostDetails = () => {
   const [posts, setPosts] = useState<PostData | null>(null);
@@ -36,7 +37,7 @@ const PostDetails = () => {
     if (id) {
       setLoading(true);
       axios
-        .get(`http://localhost:3000/api/get-post/${id}`)
+        .get(`${BASE_URL}/get-post/${id}`)
         .then((res: any) => {
           setPosts(res.data.post);
           setUser(res.data.user);
@@ -59,7 +60,7 @@ const PostDetails = () => {
           onClick: async () => {
             try {
               const response = await axios.delete(
-                `http://localhost:3000/api/delete-post/${id}`
+                `${BASE_URL}/delete-post/${id}`
               );
               console.log("the response is ", response);
               if (response.status) {
@@ -105,7 +106,7 @@ const PostDetails = () => {
   const handleReportSubmit = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/report-post/${id}`,
+        `${BASE_URL}/report-post/${id}`,
         { reason: reportReason, userId: userData.finduser._id },
         { withCredentials: true }
       );
@@ -145,7 +146,7 @@ const PostDetails = () => {
       <div className="post_details-card">
         <img
           width={700}
-          src={`http://localhost:3000/profile/${
+          src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${
             posts?.image[0] || "public/assets/icons/profile-placeholder.svg"
           }`}
           alt="creator"
@@ -160,7 +161,7 @@ const PostDetails = () => {
             >
               <LazyLoadImage
                 src={
-                  `http://localhost:3000/profile/${posts?.createdBy?.profile?.profileUrl}` ||
+                  `${import.meta.env.VITE_APP_BASE_URL}/profile/${posts?.createdBy?.profile?.profileUrl}` ||
                   "/assets/icons/profile-placeholder.svg"
                 }
                 alt="creator"

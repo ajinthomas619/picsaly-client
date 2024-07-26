@@ -18,7 +18,7 @@ const FullScreen = () => {
         <IoArrowBackOutline />
       </div>
       <img
-        src={`http://localhost:3000/chat/${imgURL}`}
+        src={`${import.meta.env.VITE_APP_BASE_URL}/chat/${imgURL}`}
         alt="Sent Image"
         className="max-w-full max-h-full object-contain"
       />

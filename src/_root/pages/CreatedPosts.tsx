@@ -6,6 +6,7 @@ import { debounce } from "@/lib/utils";
 import { PostData, UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 const CreatedPost = () => {
@@ -20,7 +21,7 @@ const CreatedPost = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/getCreatedPost/${routeId}`); // Use routeId for consistency
+      const response = await axios.get(`${BASE_URL}/getCreatedPost/${routeId}`); // Use routeId for consistency
       console.log("createdPost data", response.data);
       setPosts(response?.data?.data);
     } catch (error) {
@@ -57,7 +58,7 @@ const CreatedPost = () => {
           <Link to={`/post/${post._id}`}>
   <LazyLoadImage
   key={post._id}
-  src={`http://localhost:3000/profile/${post.image[0]}`}
+  src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${post.image[0]}`}
   alt="Profile"
   className="w-64 h-64 object-cover rounded-lg"
   loading="lazy"

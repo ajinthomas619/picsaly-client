@@ -6,6 +6,7 @@ import { debounce } from "@/lib/utils";
 import { PostData, UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const LikedPost = () => {
   const userData = useSelector((state: UserData) => state.persisted.user.userData);
@@ -22,7 +23,7 @@ const LikedPost = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/getLikedPosts/${routeId}`,{
+      const response = await axios.get(`${BASE_URL}/getLikedPosts/${routeId}`,{
         withCredentials:true
       }); // Use routeId for consistency
       console.log("likedpost data", response.data);
@@ -60,7 +61,7 @@ const LikedPost = () => {
           <Link to={`/post/${post._id}`}>
       <LazyLoadImage
       key={post._id}
-      src={`http://localhost:3000/profile/${post.image[0]}`}
+      src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${post.image[0]}`}
       alt="Profile"
       className="w-64 h-64 object-cover rounded-lg"
       loading="lazy"

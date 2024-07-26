@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,7 +25,7 @@ const People = () => {
         console.log("user data", userData);
        
         console.log("the user id", id);
-        const res = await axios.get(`http://localhost:3000/api/getAllUsers/${id}`,{withCredentials:true});
+        const res = await axios.get(`${BASE_URL}/getAllUsers/${id}`,{withCredentials:true});
         console.log("the actual response", res);
         console.log("all users", res.data.data);
         setUsers(res.data.data);
@@ -49,7 +50,7 @@ const People = () => {
               {user?.profile?.profileUrl && (
                 <Link to={`/profile/${user?._id}`} className="shrink-0">
                 <img 
-                  src={`http://localhost:3000/profile/${user.profile.profileUrl}`} 
+                  src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${user.profile.profileUrl}`} 
                   alt={`${user?.basicInformation?.username}'s profile`} 
                   className="w-16 h-16 rounded-full object-cover"
                 />

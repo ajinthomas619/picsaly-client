@@ -9,6 +9,7 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import PostForm from "../../components/forms/PostForm";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const EditPost = () => {
   const user = useSelector((state: UserData) => state.persisted.user.userData);
@@ -23,7 +24,7 @@ const EditPost = () => {
     const fetchPost = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3000/api/get-post/${id}`,{withCredentials:true});
+        const response = await axios.get(`${BASE_URL}/get-post/${id}`,{withCredentials:true});
         setPost(response.data.post);
       } catch (error) {
         console.error("Error fetching post:", error);

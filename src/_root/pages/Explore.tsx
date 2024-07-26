@@ -8,6 +8,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from "react-router-dom";
 import { getAllPostFunction } from "@/utils/api/methods/PostService/get";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 const ExplorePage = () => {
@@ -37,7 +38,7 @@ const ExplorePage = () => {
 
     try {
        
-        const postsResponse = await axios.get(`http://localhost:3000/api/search-post/${query}`,{
+        const postsResponse = await axios.get(`${BASE_URL}/search-post/${query}`,{
           withCredentials:true
         });
           
@@ -94,7 +95,7 @@ const ExplorePage = () => {
             <Link to={`/post/${post._id}`}>
             <LazyLoadImage
             key={post._id}
-            src={`http://localhost:3000/profile/${post.image[0]}`}
+            src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${post.image[0]}`}
             alt="Profile"
             className="w-64 h-64 object-cover rounded-lg"
             loading="lazy"

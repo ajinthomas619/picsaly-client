@@ -33,7 +33,7 @@ const FollowingList = ({userId}) => {
                   {user?.profile?.profileUrl && (
                     <Link to={`/profile/${user?._id}`} className="shrink-0">
                       <LazyLoadImage
-                        src={`http://localhost:3000/profile/${user.profile.profileUrl}`}
+                        src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${user.profile.profileUrl}`}
                         alt={`${user?.basicInformation?.username}'s profile`}
                         className="w-16 h-16 rounded-full object-cover"
                       />

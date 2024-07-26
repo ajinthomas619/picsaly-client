@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { PostData } from "@/utils/interfaces/interface"
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 
 const Saved = () => {
@@ -26,7 +27,7 @@ const Saved = () => {
  
   const fetchPosts =async() => {
     try{
-      const response =  await axios.post(`http://localhost:3000/api/get-saved-post/${userData.finduser._id}`,{
+      const response =  await axios.post(`${BASE_URL}/get-saved-post/${userData.finduser._id}`,{
         withCredentials:true
       })
       setPosts(response.data.posts)
@@ -72,7 +73,7 @@ const Saved = () => {
       <Link to={`/post/${post._id}`}>
       <LazyLoadImage
   key={post._id}
-  src={`http://localhost:3000/profile/${post.image[0]}`}
+  src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${post.image[0]}`}
   alt="Profile"
   className="w-64 h-64 object-cover rounded-lg"
   loading="lazy"

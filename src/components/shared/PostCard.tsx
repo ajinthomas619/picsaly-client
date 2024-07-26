@@ -50,7 +50,7 @@ const PostCard = ({ post }: PostCardProps) => {
               <LazyLoadImage
                 src={
                   userData
-                    ? `http://localhost:3000/profile/${
+                    ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${
                         userData.profile.profileUrl ||
                         "https://avatar.iran.liara.run/public/boy"
                       }`
@@ -104,7 +104,7 @@ const PostCard = ({ post }: PostCardProps) => {
           <LazyLoadImage
             width={400}
             height={300}
-            src={`http://localhost:3000/profile/${
+            src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${
               post?.image[0] || "public/assets/icons/profile-placeholder.svg"
             }`}
             className="post-card_img rounded-lg "

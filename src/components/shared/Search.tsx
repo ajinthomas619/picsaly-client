@@ -83,7 +83,7 @@ const Search: React.FC = () => {
                                     <h3>{post.caption}</h3>
                                     <Link to={`/post/${post._id}`}>
                                         <img
-                                            src={`http://localhost:3000/profile/${post.image}`}
+                                            src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${post.image}`}
                                             alt={`${post.image}'s profile`}
                                             className="w-32 h-32 object-cover"
                                         />
@@ -100,7 +100,7 @@ const Search: React.FC = () => {
                                     <h3>{user.basicInformation.username}</h3>
                                     <Link to={`/profile/${user._id}`}>
                                         <img
-                                            src={`http://localhost:3000/profile/${user.profile.profileUrl}`}
+                                            src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${user.profile.profileUrl}`}
                                             alt={`${user?.basicInformation?.username}'s profile`}
                                             className="w-16 h-16 rounded-full object-cover"
                                         />

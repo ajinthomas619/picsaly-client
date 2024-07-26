@@ -8,6 +8,7 @@ import { confirmAlert } from "react-confirm-alert";
 import axios from "axios";
 import { Link, Route, Routes } from "react-router-dom";
 import FullScreen from "../shared/FullScreen";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 interface Props {
   message: {
@@ -34,8 +35,8 @@ const Message: React.FC<Props> = ({ message }) => {
   const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe
-    ? `http://localhost:3000/profile/${userData.finduser.profile.profileUrl}`
-    : `http://localhost:3000/profile/${selectedConversation?.profileUrl}`;
+    ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${userData.finduser.profile.profileUrl}`
+    : `${import.meta.env.VITE_APP_BASE_URL}/profile/${selectedConversation?.profileUrl}`;
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
   const shakeClass = message.shouldShake ? "shake" : "";
 
@@ -49,7 +50,7 @@ const Message: React.FC<Props> = ({ message }) => {
           onClick: async () => {
             try {
               const response = await axios.delete(
-                `http://localhost:3000/api/deleteMessage/${message._id}`
+                `${BASE_URL}/deleteMessage/${message._id}`
               );
               if (response.status) {
                 removeMessage(message._id);
@@ -85,7 +86,7 @@ const Message: React.FC<Props> = ({ message }) => {
         ) : message.imgURL ? (
           <Link to={`/full-screen/${message.imgURL}`}>
             <img
-              src={`http://localhost:3000/chat/${message.imgURL}`}
+              src={`${import.meta.env.VITE_APP_BASE_URL}/chat/${message.imgURL}`}
               alt="Sent Image"
               className="max-w-full h-36"
             />

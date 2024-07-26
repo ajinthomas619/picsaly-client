@@ -26,7 +26,7 @@ const UpdateProfile = () => {
   const userData = useSelector((state: any) => state.persisted.user.userData);
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
-      image: userData?.profile?.profileUrl ? `http://localhost:3000/profile/${userData.profile.profileUrl}` : "",
+      image: userData?.profile?.profileUrl ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${userData.profile.profileUrl}` : "",
     },
   });
 
@@ -64,7 +64,7 @@ const navigate = useNavigate()
 
   useEffect(() => {
     if (userData?.profile?.profileUrl) {
-      form.setValue("image", `http://localhost:3000/profile/${userData.profile.profileUrl}`);
+      form.setValue("image", `${import.meta.env.VITE_APP_BASE_URL}/profile/${userData.profile.profileUrl}`);
     }
   }, [userData, form]);
 
@@ -87,7 +87,7 @@ const navigate = useNavigate()
 
       const imageUrl = response.data.imageUrl;
       dispatch(updateUser({ ...userData, profile: { ...userData.profile, profileUrl: imageUrl } }));
-      form.setValue("image", `http://localhost:3000/profile/${imageUrl}`);
+      form.setValue("image", `${import.meta.env.VITE_APP_BASE_URL}/profile/${imageUrl}`);
 
     } catch (error) {
       console.error("Failed to update profile image:", error);

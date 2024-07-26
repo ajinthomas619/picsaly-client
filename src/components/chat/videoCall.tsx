@@ -6,6 +6,7 @@ import { UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import useConversation from "@/zustand/useConversation";
 import toast from "react-hot-toast";
+import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
 const VideoCall: React.FC = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const VideoCall: React.FC = () => {
     useEffect(() => {
         if (!selectedConversation || !userData) return;
 
-        axios.post(`http://localhost:3000/api/videocall/${selectedConversation._id}`, {
+        axios.post(`${BASE_URL}/videocall/${selectedConversation._id}`, {
             senderId: userData.finduser._id,
             roomId
         }, {
