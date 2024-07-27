@@ -1,4 +1,4 @@
-FROM node:21-alpine
+FROM node:21-alpine AS build
 
 
 
@@ -10,13 +10,15 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 5173
 
 FROM nginx:1.27.0-alpine
 
 WORKDIR /usr/share/nginx/html
 
-RUN rm-rf *
+RUN rm -rf *
 
 
 COPY --from=build /App/build .
