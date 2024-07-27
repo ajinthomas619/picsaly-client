@@ -5,7 +5,7 @@ import { getUserByName_Api,getUserData_Api,updateProfile_Api,addProfile_Api,addP
 export const getUserFunction = async(data:any) => {
     try{
         const datas ={id:data}
-        const response = await axios.create({withCredentials:true}).post(getUser_Api,dataa)
+        const response = await axios.create({withCredentials:true}).post(getUser_Api,datas)
         return response.data
     }
     catch(error){

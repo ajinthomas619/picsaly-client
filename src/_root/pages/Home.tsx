@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllPostFunction, getPostorHome } from "@/utils/api/methods/PostService/get";
+import {  getPostorHome } from "@/utils/api/methods/PostService/get";
 import { UserData } from "@/utils/interfaces/interface";
 import { useSelector } from "react-redux";
 

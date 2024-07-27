@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { debounce } from "@/lib/utils";
-import { PostData } from "@/utils/interfaces/interface";
+import { PostData,UserData } from "@/utils/interfaces/interface";
 import axios from "axios";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from "react-router-dom";

@@ -12,7 +12,7 @@ import {
 import FileUploader from "../shared/FileUploader";
 import { useDispatch, useSelector } from "react-redux";
 import { addPostData } from "@/redux/slices/postSlice";
-import { createPostFunction, updatePostFunction } from "@/utils/api/methods/PostService/post";
+import { createPostFunction} from "@/utils/api/methods/PostService/post";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import {Button} from"../ui/button"
