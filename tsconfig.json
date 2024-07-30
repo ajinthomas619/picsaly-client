@@ -19,7 +19,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false,
-    "noEmitOnError": true,
+    "noEmitOnError": false,
 
     //shadCN
 
