@@ -17,17 +17,17 @@ const UserManagement: React.FC = () => {
         },
         {
             name: "Name",
-            selector: (row: UserData) => row.basicInformation.username
+            selector: (row: UserData) => row?.basicInformation?.username
         },
         {
             name: "Email",
-            selector: (row: UserData) => row.basicInformation.email
+            selector: (row: UserData) => row?.basicInformation?.email
         },
         {
             name: "Actions",
             cell: (row: UserData) => (
                 <div>
-                    {row.basicInformation.isBlocked === false ? (
+                    {row?.basicInformation?.isBlocked === false ? (
                         <button className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-300"
                             onClick={() => handleStatusChange(row._id,true)}>
                             Block
@@ -55,7 +55,7 @@ const UserManagement: React.FC = () => {
             });
     }, [reload]);
 
-    const handleStatusChange = (userId: string) => {
+    const handleStatusChange = (userId: string,status:boolean) => {
         confirmAlert({
             title: "Confirm to Change Status",
             message: "Are you sure to change the status of this user?",

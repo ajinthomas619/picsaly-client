@@ -14,7 +14,7 @@ const Topbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const currentUser: UserData = useSelector((state: any) => state.persisted.user.userData);
+  const currentUser: UserData = useSelector((state: UserData) => state.persisted.user.userData);
 
   useEffect(() => {
     dispatch(getUser());

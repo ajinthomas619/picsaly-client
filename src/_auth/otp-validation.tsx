@@ -32,7 +32,7 @@ const Data = useSelector(
       else{
         const data:UserData ={
           fullname: response.data.user?.fullname??"",
-          uid:response.data.user?.uid??"",
+          userId:response.data.user?.uid??"",
           email:response.data.user?.email??"",
           userName:response.data.user?.username??"",
           profilePicture:response.data.user?.profile_picture??"",
@@ -44,8 +44,6 @@ const Data = useSelector(
           _id:response.data.user?._id??"",
           followers:response.data.user?.followers??[],
           following:response.data.user?.following??[],
-          Bio:response.data.user?.bio??"",
-          profileUrl:response.data.user?.profileUrl??"",
           createdOn:new Date(Date.now())
 
         }

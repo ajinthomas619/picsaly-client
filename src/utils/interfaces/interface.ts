@@ -15,6 +15,7 @@ export interface UserData {
     following:any[];
     _id:string;
     createdOn:Date;
+   
 }
 export interface PostData {
     caption:string;
@@ -30,11 +31,13 @@ export interface PostData {
 
 export interface CommentData {
     text:string;
-    _id:string;
+    _id:any;
     name:String;
     postId: string;
     createdAt: Date;
-    userId:string
+    userId:string;
+    username:any;
+    replies:any
 }
 export interface Message {
     shouldShake:boolean;

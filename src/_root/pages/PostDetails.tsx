@@ -65,9 +65,9 @@ const PostDetails = () => {
               console.log("the response is ", response);
               if (response.status) {
                 navigate("/");
-                return { status: response.status, message: response.message };
+                return { status: response.status, message: response?.message };
               } else {
-                return { status: response.status, message: response.message };
+                return { status: response.status, message: response?.message };
               }
             } catch (error) {
               console.log("error in deleting post", error);
@@ -187,7 +187,7 @@ const PostDetails = () => {
               <Link
                 to={`/update-post/${posts?._id}`}
                 className={`${
-                  userData?._id !== posts?.createdBy._id && "hidden"
+                  userData?._id !== posts?.createdBy?._id && "hidden"
                 }`}
               >
                 <img
@@ -202,7 +202,7 @@ const PostDetails = () => {
                 onClick={handleDeletePost}
                 variant="ghost"
                 className={`post_details-delete_btn ${
-                  userData?._id !== posts?.createdBy._id && "hidden"
+                  userData?._id !== posts?.createdBy?._id && "hidden"
                 }`}
               >
                 <img
@@ -230,7 +230,7 @@ const PostDetails = () => {
       <div className="w-full max-w-5xl">
         <hr className="border w-full border-dark-4/80" />
 
-        {posts?.createdBy._id === userData.finduser._id ? (
+        {posts?.createdBy?._id === userData.finduser._id ? (
           <div className="flex flex-row justify-between gap-4 mt-8">
             <MdDelete
               className="rounded-lg w-6 h-6 bg-indigo-100 mt-2 "

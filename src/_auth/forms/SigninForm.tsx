@@ -75,7 +75,7 @@ const LoginForm: React.FC = () => {
       const googleUser = response.user;
       console.log("gooo=", googleUser);
       const userData: UserData = {
-        uid: googleUser.uid || "",
+        userId: googleUser.uid || "",
         userName: googleUser.displayName || "",
         email: googleUser.email || "",
         profilePicture: googleUser.photoURL || "",

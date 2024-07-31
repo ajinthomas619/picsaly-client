@@ -18,22 +18,22 @@ const PostManagement = () => {
         },
         {
             name: "Title",
-            selector: (row: PostData) => row.caption,
+            selector: (row: PostData) => row?.caption,
         },
         {
             name: "Author",
-            selector: (row: PostData) => row.createdBy.basicInformation.username,
+            selector: (row: PostData) => row.createdBy?.basicInformation.username,
         },
         {
             name: "Reports",
-            selector: (row: PostData) => row.reportedUsersList.length,
+            selector: (row: PostData) => row?.reportedUsersList.length,
         },
         {
             name: "Actions",
             cell: (row: PostData) => (
                 <div>
                     
-                    {row.Visibility ? (
+                    {row?.Visibility ? (
                         <button className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-300"
                             onClick={() => handleStatusChange(row._id)}>
                             Block

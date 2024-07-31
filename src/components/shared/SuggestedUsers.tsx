@@ -12,7 +12,7 @@ const SuggestedUsers = () => {
   const [loading, setLoading] = useState(true);
 
   // Access the userData directly from the state
-  const userData = useSelector((state) => state.persisted.user.userData);
+  const userData = useSelector((state:any) => state.persisted.user.userData);
   const fetchSuggestedUsers = async (id: string) => {
 
     try {

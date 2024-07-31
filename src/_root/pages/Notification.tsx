@@ -16,6 +16,7 @@ interface NotificationItem {
   action_details: {
     comment: string;
     post_image: string;
+    post_id:any;
   };
   timestamp: string;
   senderUserData?: {
@@ -187,7 +188,7 @@ console.log("notifiactions ",notifications)
                   {(item.action_type === "like" ||
                     item.action_type === "comment") && (
                     <div className="h-full w-3/12 p-2 flex justify-center items-center">
-                      <Link to={`/post/${item.action_details.post_id}`}>
+                      <Link to={`/post/${item.action_details?.post_id}`}>
                       <img
                         src={item.action_details.post_image}
                         className="w-full h-full object-cover"

@@ -18,7 +18,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import FollowersList from "@/components/shared/FollowersList";
 import FollowingList from "@/components/shared/FollowingList";
 import Follow from "@/components/shared/Follow";
-import { RootState } from "@/store";
+
 import BlockUser from "@/components/shared/blockUser";
 import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 
@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const User = useSelector((state: RootState) => state.persisted.user.userData);
+  const User = useSelector((state: any) => state.persisted.user.userData);
   const userId = User?.finduser?._id;
 
   useEffect(() => {

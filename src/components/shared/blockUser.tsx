@@ -10,7 +10,7 @@ const BlockUser = ({id,currentUserId}:any) => {
 
   const [currentUser,setCurrentUser] = useState(null)
   const [blockUser,setBlockUser] = useState(false)
-  const userData = useSelector((state) => state.persisted.user.userData)
+  const userData = useSelector((state:any) => state.persisted.user.userData)
   const dispatch = useDispatch()
 
   useEffect(() => {

@@ -53,11 +53,11 @@ const Message: React.FC<Props> = ({ message }) => {
                 `${BASE_URL}/deleteMessage/${message._id}`
               );
               if (response.status) {
-                removeMessage(message._id);
+                removeMessage(message?._id);
                 console.log("message deleted");
-                return { status: response.status, message: response.message };
+                return { status: response.status, message: response?.message };
               } else {
-                return { status: response.status, message: response.message };
+                return { status: response.status, message: response?.message };
               }
             } catch (error) {
               console.log("error in deleting messages", error);

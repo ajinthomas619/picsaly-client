@@ -115,6 +115,9 @@ const SignupForm: React.FC = () => {
     if (Object.keys(formErrors).length === 0) {
       setShownErrors(new Set());
     }
+    else {
+      Object.values(formErrors).forEach(error => showToast(error));
+    }
   }, [formErrors]);
 
   return (
@@ -134,7 +137,7 @@ const SignupForm: React.FC = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {formErrors.username && showToast(formErrors.username)}
+     
         </div>
 
         <div className="mb-5 w-full max-w-md">
@@ -146,7 +149,7 @@ const SignupForm: React.FC = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          {formErrors.name && showToast(formErrors.name)}
+         
         </div>
 
         <div className="mb-5 w-full max-w-md">
@@ -158,7 +161,7 @@ const SignupForm: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {formErrors.email && showToast(formErrors.email)}
+      
         </div>
 
         <div className="mb-5 w-full max-w-md">
@@ -170,7 +173,7 @@ const SignupForm: React.FC = () => {
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
           />
-          {formErrors.mobile && showToast(formErrors.mobile)}
+        
         </div>
 
         <div className="mb-5 w-full max-w-md">
@@ -182,7 +185,7 @@ const SignupForm: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {formErrors.password && showToast(formErrors.password)}
+       
         </div>
 
         <div className="mb-5 w-full max-w-md">
@@ -194,7 +197,7 @@ const SignupForm: React.FC = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          {formErrors.confirmPassword && showToast(formErrors.confirmPassword)}
+         
         </div>
 
         <Button type="submit">Sign up</Button>
