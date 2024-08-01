@@ -1,4 +1,13 @@
 {
-    "regions": ["bom1"],
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-  }
+  "regions": ["bom1"],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["src/**"]
+      }
+    }
+  ]
+}

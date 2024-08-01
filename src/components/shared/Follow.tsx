@@ -9,7 +9,7 @@ import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
 const Follow = ( {id, currentUserId,fetchSuggestedUsers}:any) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [followUser, setFollowUser] = useState(false);
-  const userData = useSelector((state) => state.persisted.user.userData);
+  const userData = useSelector((state:any) => state.persisted.user.userData);
   const dispatch = useDispatch();
 
   useEffect(() => {

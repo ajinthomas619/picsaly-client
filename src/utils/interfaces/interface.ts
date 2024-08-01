@@ -7,7 +7,7 @@ export interface UserData {
     fullname:string;
     password:string;
     mobile:string;
-    profilePicture:string;
+    profilePicture:any;
     userId:string;
     userName:string;
     bio:string;
@@ -15,6 +15,7 @@ export interface UserData {
     following:any[];
     _id:string;
     createdOn:Date;
+    finduser:any
    
 }
 export interface PostData {
@@ -37,7 +38,8 @@ export interface CommentData {
     createdAt: Date;
     userId:string;
     username:any;
-    replies:any
+    replies:any;
+    likes:any
 }
 export interface Message {
     shouldShake:boolean;
