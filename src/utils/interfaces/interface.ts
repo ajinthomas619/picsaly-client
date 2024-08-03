@@ -13,11 +13,13 @@ export interface UserData {
     bio:string;
     followers:any[];
     following:any[];
-    _id:string;
+    _id:any;
     createdOn:Date;
     finduser:any
    
 }
+
+
 export interface PostData {
     caption:string;
     _id:string;

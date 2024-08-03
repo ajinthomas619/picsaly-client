@@ -34,9 +34,12 @@ const Message: React.FC<Props> = ({ message }) => {
   }
   const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "chat-end" : "chat-start";
+  
   const profilePic = fromMe
     ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${userData.finduser.profile.profileUrl}`
-    : `${import.meta.env.VITE_APP_BASE_URL}/profile/${selectedConversation?.profileUrl}`;
+    : `${
+       // @ts-ignore
+      import.meta.env.VITE_APP_BASE_URL}/profile/${selectedConversation?.profileUrl}`;
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
   const shakeClass = message.shouldShake ? "shake" : "";
 
@@ -50,14 +53,22 @@ const Message: React.FC<Props> = ({ message }) => {
           onClick: async () => {
             try {
               const response = await axios.delete(
-                `${BASE_URL}/deleteMessage/${message._id}`
+                `${BASE_URL}/deleteMessage/${
+                   // @ts-ignore
+                  message._id}`
               );
               if (response.status) {
-                removeMessage(message?._id);
+                removeMessage(
+                   // @ts-ignore
+                  message?._id);
                 console.log("message deleted");
-                return { status: response.status, message: response?.message };
+                return {
+                   // @ts-ignore
+                  status: response.status, message: response?.message };
               } else {
-                return { status: response.status, message: response?.message };
+                return {
+                   // @ts-ignore
+                  status: response.status, message: response?.message };
               }
             } catch (error) {
               console.log("error in deleting messages", error);

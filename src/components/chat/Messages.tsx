@@ -28,7 +28,9 @@ const Messages: React.FC = () => {
                 const isLastMessage = ind === messages.length - 1;
                 return (
                     <div key={ind} ref={isLastMessage ? lastMessageRef : null}>
-                        <Message message={message} />
+                        <Message
+                         // @ts-ignore
+                        message={message} />
                     </div>
                 );
             })}

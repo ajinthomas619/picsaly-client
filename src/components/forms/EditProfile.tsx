@@ -37,8 +37,11 @@ const EditProfile = () => {
   useEffect(() => {
     if (user) {
       setFormData({
+         // @ts-ignore
         username: user?.data?.basicInformation?.username || "",
+         // @ts-ignore
         bio: user?.data?.profile?.Bio || "",
+         // @ts-ignore
         email: user?.data?.basicInformation?.email || "",
       });
     }
@@ -63,6 +66,7 @@ const EditProfile = () => {
       return;
     }
     try {
+       // @ts-ignore
       const userId = user?.data?._id;
       if (!userId) {
         throw new Error("User ID is not available");

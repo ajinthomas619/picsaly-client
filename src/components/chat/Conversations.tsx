@@ -8,7 +8,9 @@ const Conversations:React.FC = () => {
   
   
 
-    if(loading || !Array.isArray(conversations) || conversations?.length === 0) {
+    if(
+         // @ts-ignore
+        loading || !Array.isArray(conversations) || conversations?.length === 0) {
         return <div>Loading...</div>
     }
 

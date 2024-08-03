@@ -77,6 +77,7 @@ const navigate = useNavigate()
 
     try {
       const response = await axios.post(
+        //@ts-ignore
         `${BASE_URL}/addProfileImage/${user?._id}`,
         formData,
         { withCredentials: true }

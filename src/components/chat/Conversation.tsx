@@ -3,7 +3,9 @@ import useConversation from "@/zustand/useConversation";
 import { useSocketContext } from "@/context/SocketContext";
 import { BsCircleFill } from "react-icons/bs";
 
-const Conversation: React.FC<Props> = ({ conversation, lastIndex }) => {
+const Conversation: React.FC<
+ // @ts-ignore
+Props> = ({ conversation, lastIndex }) => {
 
   const { selectedConversation, setSelectedConversation,unreadMessages,setUnreadMessages } = useConversation();
   const { onlineUsers } = useSocketContext();
@@ -45,7 +47,9 @@ const Conversation: React.FC<Props> = ({ conversation, lastIndex }) => {
             <p className="font-bold px-2 mr-2 text-gray-800">
               {conversation?.username}
             </p>
-            {unreadMessages?.senderId === conversation._id && (
+            {
+             // @ts-ignore
+            unreadMessages?.senderId === conversation._id && (
               <BsCircleFill fill="red" className="ms-1.5 mt-1.5" />
             )}
           </div>

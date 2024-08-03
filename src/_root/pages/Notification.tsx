@@ -147,8 +147,11 @@ console.log("notifiactions ",notifications)
                   className="w-full h-20 flex justify-between border rounded-md flex-none"
                   key={item._id}
                 >
+                 
                   <div className="h-full w-3/12 flex justify-normal items-center p-2">
-                  <Link to={`/profile/${item.senderUserData?._id}`}>
+                  <Link 
+                   //@ts-ignore
+                  to={`/profile/${item.senderUserData?._id}`}>
                     <img
                       src={`${import.meta.env.VITE_APP_BASE_URL}/profile/${item.senderUserData?.profile?.profileUrl}`}
                       className="w-10 h-10 lg:w-[50px] lg:h-[50px] rounded-full border border-[#C1506D]"

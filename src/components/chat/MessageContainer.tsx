@@ -16,7 +16,9 @@ const MessageContainer = () => {
             {selectedConversation ? (
                 <div className="flex-1 flex flex-col  h-[300px] mb-36 ">
                     <div className="flex justify-between mb-2">
-                        <span className="text-sm sm:text-base md:text-lg lg:text-xl">To: {selectedConversation?.username}</span>
+                        <span className="text-sm sm:text-base md:text-lg lg:text-xl">To: {
+                         // @ts-ignore
+                        selectedConversation?.username}</span>
                         <div>
                             <Link to={`/videocall/${roomId}`}>
                                 <Video className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />

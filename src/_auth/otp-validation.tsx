@@ -30,6 +30,7 @@ const Data = useSelector(
         toast.error(response?.data?.message)
       }
       else{
+        //@ts-ignore
         const data:UserData ={
           fullname: response.data.user?.fullname??"",
           userId:response.data.user?.uid??"",

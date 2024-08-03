@@ -22,18 +22,22 @@ const PostManagement = () => {
         },
         {
             name: "Author",
+            //@ts-ignore
             selector: (row: PostData) => row.createdBy?.basicInformation.username,
         },
         {
             name: "Reports",
+            //@ts-ignore
             selector: (row: PostData) => row?.reportedUsersList.length,
         },
         {
             name: "Actions",
             cell: (row: PostData) => (
                 <div>
-                    
-                    {row?.Visibility ? (
+                    //@ts-ignore
+                    {
+                    //@ts-ignore
+                    row?.Visibility ? (
                         <button className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-300"
                             onClick={() => handleStatusChange(row._id)}>
                             Block

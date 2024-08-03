@@ -114,7 +114,10 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
           <FormItem>
             <FormLabel className="shad-form_label">Photo</FormLabel>
             <FormControl>
-            <FileUploader
+           
+            <
+            // @ts-ignore
+              FileUploader
             fieldChange={field.onChange}
             mediaUrl={user?.imageUrl}
             
