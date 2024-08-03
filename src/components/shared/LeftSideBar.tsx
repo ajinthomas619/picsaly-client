@@ -52,7 +52,9 @@ const LeftSideBar = () => {
 
      </Link>
      <ul className="flex flex-col gap-6">
-    {sidebarLinks.map((link:INavLink)=> {
+    {sidebarLinks.map((
+       // @ts-ignore
+      link:INavLink)=> {
       const isActive = pathname === link.route
       return (
         <li key={link.label} className={`leftsidebar-link ${

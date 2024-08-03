@@ -24,6 +24,7 @@ const Topbar = () => {
     try {
       await axios.get(`${BASE_URL}/logout`);
       navigate('/log-in');
+       // @ts-ignore
       dispatch(clearUser(currentUser));
     } catch (error) {
       console.log(error);

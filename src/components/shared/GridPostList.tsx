@@ -59,16 +59,21 @@ const GridPostList = ({
               <div className="flex items-center justify-start gap-2 flex-1">
                 <img
                   src={
+                     // @ts-ignore
                     post.createdBy?.profilePicture ||
                     "/assets/icons/profile-placeholder.svg"
                   }
                   alt="creator"
                   className="w-8 h-8 rounded-full"
                 />
-                <p className="line-clamp-1">{post.createdBy.name}</p>
+                <p className="line-clamp-1">{
+                 // @ts-ignore
+                post.createdBy.name}</p>
               </div>
             )}
-            {showStats && <PostStats post={post} userId={user.id} />}
+            {
+             // @ts-ignore
+            showStats && <PostStats post={post} userId={user.id} />}
           </div>
         </li>
       ))}

@@ -61,7 +61,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
           },
           {}
         );
-      
+       // @ts-ignore
       const like = post.Likes.map((item) => item.userId)
     
       for(let keys in like){
@@ -130,6 +130,7 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
       console.log("the notification type",notificationType)
       const data = {
         sender_id:userData.finduser?._id,
+         // @ts-ignore
         receiver_id:post.createdBy?._id,
         notificationType:notificationType,
         postId:post._id,
@@ -476,7 +477,9 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                   <div className="text-sm mb-2 flex items-center">
                     <img
                       src={
+                         // @ts-ignore
                         comment.userId?.profile?.profileUrl
+                         // @ts-ignore
                           ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${comment.userId?.profile?.profileUrl}`
                           : "https://avatar.iran.liara.run/public/boy"
                       }
@@ -488,7 +491,9 @@ const PostStats: React.FC<PostStatsProps> = ({ post }) => {
                     <p className="text-semibold text-xl text-indigo-400 border rounded-md">
                       "{comment.text}"
                     </p>
-                    {comment.userId._id === userData.finduser._id && (
+                    {
+                     // @ts-ignore
+                    comment.userId._id === userData.finduser._id && (
                       <>
                         <button
                           className="text-blue-500 ml-auto"

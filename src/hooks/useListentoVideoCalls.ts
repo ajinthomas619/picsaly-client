@@ -1,5 +1,6 @@
 import { useEffect,useState } from "react";
 import { useSocketContext } from "@/context/SocketContext";
+ // @ts-ignore
 import jump from '../../public/assets/jump.mp3'
 
 const useListenToVideoCalls = () => {

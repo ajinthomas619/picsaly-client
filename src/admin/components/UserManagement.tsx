@@ -17,17 +17,21 @@ const UserManagement: React.FC = () => {
         },
         {
             name: "Name",
+             // @ts-ignore
             selector: (row: UserData) => row?.basicInformation?.username
         },
         {
             name: "Email",
+             // @ts-ignore
             selector: (row: UserData) => row?.basicInformation?.email
         },
         {
             name: "Actions",
             cell: (row: UserData) => (
                 <div>
-                    {row?.basicInformation?.isBlocked === false ? (
+                    {
+                     // @ts-ignore
+                    row?.basicInformation?.isBlocked === false ? (
                         <button className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-300"
                             onClick={() => handleStatusChange(row._id,true)}>
                             Block
