@@ -1,4 +1,4 @@
-const  {Cloudinary} = require('@cloudinary/url-gen')
+import {Cloudinary} from '@cloudinary/url-gen'
 
 export const cloudinary = new Cloudinary({
     cloud:{
