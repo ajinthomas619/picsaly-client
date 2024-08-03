@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import CanvasJSReact from "@canvasjs/react-charts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
