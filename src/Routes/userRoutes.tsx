@@ -60,7 +60,9 @@ const UserRoutes = () => {
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
           <Route path="/message" element={<ChatScreen />} />
           <Route path="/videocall/:roomId" element={<VideoCall />} />
-          <Route path="/notifications" element={<Notification />} />
+          <Route path="/notifications" element={
+             // @ts-ignore
+            <Notification />} />
           
         </Route>
           <Route path="/full-screen/:imgURL" element={<FullScreen />} />

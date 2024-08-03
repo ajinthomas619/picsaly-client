@@ -51,6 +51,7 @@ const PostCard = ({ post }: PostCardProps) => {
                 src={
                   userData
                     ? `${import.meta.env.VITE_APP_BASE_URL}/profile/${
+                       // @ts-ignore
                         userData.profile.profileUrl ||
                         "https://avatar.iran.liara.run/public/boy"
                       }`
@@ -111,7 +112,9 @@ const PostCard = ({ post }: PostCardProps) => {
             alt="post image"
           />
         </Link>
-        <PostStats post={post} userId={user?.finduser._id} />
+        <PostStats
+         // @ts-ignore
+        post={post} userId={user?.finduser._id} />
       </div>
     </div>
   );
