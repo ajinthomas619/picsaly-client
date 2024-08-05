@@ -3,6 +3,7 @@ import CanvasJSReact from "@canvasjs/react-charts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
+
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const PostsPerMonth = () => {
@@ -27,7 +28,6 @@ const PostsPerMonth = () => {
                 console.error("Error fetching chart data:", error);
                 navigate("/admin");
             });
-
     }, [navigate]);
 
     const options = {
