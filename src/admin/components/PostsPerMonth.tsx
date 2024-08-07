@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // @ts-ignore
-import CanvasJSReact from "@canvasjs/react-charts";
+import CanvasJSReact from "../../react-charts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/utils/api/baseUrl/axios.baseUrl";
